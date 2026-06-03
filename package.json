@@ -1,0 +1,35 @@
+{
+  "name": "char_finder",
+  "version": "1.0.0",
+  "description": "移动端中文押韵字查找工具",
+  "scripts": {
+    "predev": "npm run index",
+    "dev": "vite --host 127.0.0.1",
+    "prebuild": "npm run index",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "index": "node scripts/build-rhyme-index.mjs",
+    "qa": "node scripts/qa.mjs",
+    "test": "npm run index && npm run build && npm run qa"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@vitejs/plugin-react": "^6.0.2",
+    "common-chinese-characters": "^0.0.3",
+    "lucide-react": "^1.17.0",
+    "pinyin-pro": "^3.28.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "subtlex-ch-chr": "^0.0.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.16",
+    "@types/react-dom": "^19.2.3",
+    "playwright": "^1.60.0"
+  }
+}
