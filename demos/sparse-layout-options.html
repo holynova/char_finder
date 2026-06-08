@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>稀疏押韵结果布局方案对比</title>
+    <style>
+      :root {
+        --ivory: #faf9f5;
+        --paper: #fffdf9;
+        --ink: #161512;
+        --muted: #87857b;
+        --line: #e5dfd3;
+        --soft: #f5eee8;
+        --soft-2: #f9f4ef;
+        --clay: #d87555;
+        --clay-dark: #b75c3f;
+        --olive: #75865d;
+        --green: #708957;
+        --rose: #e984a3;
+        --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+        --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #eceff5;
+        color: var(--ink);
+        font-family: var(--sans);
+      }
+
+      .page {
+        width: min(100%, 1500px);
+        margin: 0 auto;
+        padding: 28px;
+      }
+
+      .intro {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 22px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 26px;
+        line-height: 1.15;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .intro p {
+        max-width: 720px;
+        margin-top: 8px;
+        color: #5f625c;
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      .legend-note {
+        min-width: 172px;
+        padding: 10px 12px;
+        border: 1px solid #d8dce5;
+        border-radius: 8px;
+        background: #fff;
+        color: #535750;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(300px, 1fr));
+        gap: 18px;
+        align-items: start;
+      }
+
+      .demo-card {
+        overflow: hidden;
+        border: 1px solid #d9dde5;
+        border-radius: 14px;
+        background: white;
+        box-shadow: 0 16px 40px rgb(22 28 45 / 9%);
+      }
+
+      .demo-title {
+        min-height: 112px;
+        padding: 18px 18px 16px;
+        border-bottom: 1px solid #ebe8e1;
+        background: #fff;
+      }
+
+      .demo-title h2 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 17px;
+        line-height: 1.3;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: var(--clay);
+        color: white;
+        font-size: 14px;
+        font-weight: 750;
+      }
+
+      .demo-title p {
+        margin-top: 8px;
+        color: #62655f;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .phone {
+        min-height: 690px;
+        padding: 22px 18px 26px;
+        background: var(--ivory);
+      }
+
+      .chips {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 9px;
+        margin-bottom: 20px;
+      }
+
+      .chip {
+        height: 34px;
+        border: 2px solid var(--line);
+        border-radius: 11px;
+        background: white;
+      }
+
+      .tone-legend {
+        display: grid;
+        grid-template-columns: 62px repeat(4, 40px) 28px;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 0 13px;
+        border-top: 2px solid var(--line);
+        border-bottom: 2px solid var(--line);
+        color: #686861;
+        font-size: 16px;
+        font-weight: 650;
+      }
+
+      .tone-legend b {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        margin: 0 auto;
+        border-radius: 999px;
+        background: var(--clay);
+        color: white;
+        font-size: 20px;
+      }
+
+      .tone-legend b.active {
+        background: var(--olive);
+      }
+
+      .ai-bubble {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: var(--rose);
+        color: white;
+        font-weight: 800;
+        font-size: 13px;
+        box-shadow: 0 0 0 5px rgb(233 132 163 / 18%);
+      }
+
+      .result-row {
+        display: grid;
+        grid-template-columns: 70px repeat(4, 1fr);
+        gap: 8px;
+        min-height: 112px;
+        padding: 18px 0;
+        border-bottom: 2px solid var(--line);
+      }
+
+      .row-head strong {
+        display: block;
+        color: var(--ink);
+        font-family: var(--serif);
+        font-size: 42px;
+        font-weight: 600;
+        line-height: 0.95;
+      }
+
+      .row-head span {
+        display: block;
+        margin-top: 22px;
+        color: var(--green);
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .tone-cell {
+        display: flex;
+        min-height: 92px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .tone-cell.selected {
+        border-radius: 14px;
+        background: var(--soft);
+      }
+
+      .main-char {
+        display: block;
+        font-family: var(--serif);
+        font-size: 42px;
+        line-height: 1;
+      }
+
+      .sub-chars {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px 14px;
+        margin-top: 13px;
+        font-family: var(--serif);
+        font-size: 25px;
+        line-height: 1.15;
+      }
+
+      .empty-mark {
+        color: #d7d1c7;
+        font-family: var(--serif);
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .ghost-empty {
+        opacity: 0;
+      }
+
+      .compact-row {
+        grid-template-columns: 70px 1fr;
+        min-height: 104px;
+      }
+
+      .flow-results {
+        display: flex;
+        min-width: 0;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .flow-group {
+        display: inline-flex;
+        min-width: 62px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 13px;
+      }
+
+      .flow-group.selected {
+        min-height: 92px;
+        background: var(--soft);
+      }
+
+      .tone-dot {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 999px;
+        background: #e9dfd7;
+        color: var(--clay-dark);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .flow-group.selected .tone-dot {
+        background: white;
+      }
+
+      .tag-row {
+        display: grid;
+        grid-template-columns: 70px 1fr;
+        gap: 10px;
+        padding: 18px 0;
+        border-bottom: 2px solid var(--line);
+      }
+
+      .tone-stack {
+        display: grid;
+        gap: 10px;
+      }
+
+      .tag-line {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        align-items: baseline;
+        gap: 12px;
+        min-height: 46px;
+        padding: 8px 12px;
+        border-radius: 12px;
+      }
+
+      .tag-line.selected {
+        background: var(--soft);
+      }
+
+      .tag-line b {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: #ece4da;
+        color: var(--clay-dark);
+        font-size: 14px;
+      }
+
+      .tag-chars {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px 16px;
+        align-items: baseline;
+      }
+
+      .tag-chars .main-char {
+        display: inline;
+        font-size: 38px;
+      }
+
+      .tag-chars small {
+        font-family: var(--serif);
+        font-size: 24px;
+      }
+
+      .tile-list {
+        display: grid;
+        gap: 12px;
+        padding-top: 14px;
+      }
+
+      .rhyme-tile {
+        display: grid;
+        grid-template-columns: 72px 1fr;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid #eee6dc;
+        border-radius: 8px;
+        background: var(--paper);
+      }
+
+      .rhyme-tile.selected {
+        border-color: #ead8ca;
+        background: var(--soft-2);
+      }
+
+      .tile-head strong {
+        display: block;
+        font-family: var(--serif);
+        font-size: 37px;
+        line-height: 1;
+      }
+
+      .tile-head span {
+        display: block;
+        margin-top: 12px;
+        color: var(--green);
+        font-size: 15px;
+        font-weight: 750;
+      }
+
+      .tile-body {
+        display: grid;
+        gap: 8px;
+      }
+
+      .tile-tone {
+        display: grid;
+        grid-template-columns: 42px 1fr;
+        align-items: baseline;
+        gap: 9px;
+      }
+
+      .tile-tone b {
+        color: var(--clay-dark);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .tile-tone p {
+        font-family: var(--serif);
+        font-size: 26px;
+        line-height: 1.2;
+      }
+
+      .tile-tone strong {
+        font-size: 35px;
+        font-weight: 500;
+      }
+
+      @media (max-width: 1320px) {
+        .comparison {
+          grid-template-columns: repeat(2, minmax(320px, 1fr));
+        }
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          padding: 16px;
+        }
+
+        .intro {
+          display: block;
+        }
+
+        .legend-note {
+          margin-top: 14px;
+        }
+
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="intro">
+        <div>
+          <h1>稀疏押韵结果布局方案对比</h1>
+          <p>
+            四个 demo 使用同一组示例数据，重点观察「空结果很多」时的节奏、留白和扫描效率。
+            当前选中声调是 3，选中声母是 b。
+          </p>
+        </div>
+        <div class="legend-note">
+          样本韵母：ang<br />
+          行样本：b / p / m / f<br />
+          画布宽度：移动端近似
+        </div>
+      </section>
+
+      <section class="comparison" aria-label="四个布局方案">
+        <article class="demo-card">
+          <header class="demo-title">
+            <h2><span class="badge">1</span>弱占位四列</h2>
+            <p>保留 1-4 声调对齐，但隐藏或极弱化空位。改动最小，扫描方式和现有页面最接近。</p>
+          </header>
+          <div class="phone">
+            <div class="chips" aria-hidden="true">
+              <span class="chip"></span><span class="chip"></span><span class="chip"></span>
+              <span class="chip"></span><span class="chip"></span><span class="chip"></span>
+            </div>
+            <div class="tone-legend">
+              <span>声调</span><b>1</b><b>2</b><b class="active">3</b><b>4</b><span class="ai-bubble">AI</span>
+            </div>
+
+            <div class="result-row">
+              <div class="row-head"><strong>b</strong><span>+ ang</span></div>
+              <div class="tone-cell selected"><div><span class="main-char">帮</span></div></div>
+              <div class="tone-cell"><span class="empty-mark ghost-empty">-</span></div>
+              <div class="tone-cell"><div><span class="main-char">绑</span><div class="sub-chars">膀 榜</div></div></div>
+              <div class="tone-cell"><div><span class="main-char">棒</span><div class="sub-chars">蚌 傍</div></div></div>
+            </div>
+            <div class="result-row">
+              <div class="row-head"><strong>p</strong><span>+ ang</span></div>
+              <div class="tone-cell selected"><div><span class="main-char">膀</span><div class="sub-chars">乓</div></div></div>
+              <div class="tone-cell"><div><span class="main-char">旁</span><div class="sub-chars">膀</div></div></div>
+              <div class="tone-cell"><span class="empty-mark ghost-empty">-</span></div>
+              <div class="tone-cell"><span class="main-char">胖</span></div>
+            </div>
+            <div class="result-row">
+              <div class="row-head"><strong>m</strong><span>+ ang</span></div>
+              <div class="tone-cell selected"><span class="empty-mark ghost-empty">-</span></div>
+              <div class="tone-cell"><div><span class="main-char">忙</span><div class="sub-chars">盲 芒 茫</div></div></div>
+              <div class="tone-cell"><span class="empty-mark ghost-empty">-</span></div>
+              <div class="tone-cell"><span class="empty-mark ghost-empty">-</span></div>
+            </div>
+            <div class="result-row">
+              <div class="row-head"><strong>f</strong><span>+ ang</span></div>
+              <div class="tone-cell selected"><div><span class="main-char">方</span><div class="sub-chars">芳 坊</div></div></div>
+              <div class="tone-cell"><div><span class="main-char">房</span><div class="sub-chars">防 妨 坊</div></div></div>
+              <div class="tone-cell"><span class="main-char">访</span></div>
+              <div class="tone-cell"><span class="main-char">放</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-card">
+          <header class="demo-title">
+            <h2><span class="badge">2</span>稀疏流式</h2>
+            <p>少于 3 个有效声调时，行内结果自然收拢；多结果行仍然可以维持较强的横向比较感。</p>
+          </header>
+          <div class="phone">
+            <div class="chips" aria-hidden="true">
+              <span class="chip"></span><span class="chip"></span><span class="chip"></span>
+              <span class="chip"></span><span class="chip"></span><span class="chip"></span>
+            </div>
+            <div class="tone-legend">
+              <span>声调</span><b>1</b><b>2</b><b class="active">3</b><b>4</b><span class="ai-bubble">AI</span>
+            </div>
+
+            <div class="result-row compact-row">
+              <div class="row-head"><strong>b</strong><span>+ ang</span></div>
+              <div class="flow-results">
+                <div class="flow-group selected"><span class="tone-dot">1</span><span class="main-char">帮</span></div>
+                <div class="flow-group"><span class="tone-dot">3</span><div><span class="main-char">绑</span><div class="sub-chars">膀 榜</div></div></div>
+                <div class="flow-group"><span class="tone-dot">4</span><span class="main-char">棒</span></div>
+              </div>
+            </div>
+            <div class="result-row compact-row">
+              <div class="row-head"><strong>p</strong><span>+ ang</span></div>
+              <div class="flow-results">
+                <div class="flow-group selected"><span class="tone-dot">1</span><div><span class="main-char">膀</span><div class="sub-chars">乓</div></div></div>
+                <div class="flow-group"><span class="tone-dot">2</span><span class="main-char">旁</span></div>
+                <div class="flow-group"><span class="tone-dot">4</span><span class="main-char">胖</span></div>
+              </div>
+            </div>
+            <div class="result-row compact-row">
+              <div class="row-head"><strong>m</strong><span>+ ang</span></div>
+              <div class="flow-results">
+                <div class="flow-group"><span class="tone-dot">2</span><div><span class="main-char">忙</span><div class="sub-chars">盲 芒 茫</div></div></div>
+              </div>
+            </div>
+            <div class="result-row compact-row">
+              <div class="row-head"><strong>f</strong><span>+ ang</span></div>
+              <div class="flow-results">
+                <div class="flow-group selected"><span class="tone-dot">1</span><span class="main-char">方</span></div>
+                <div class="flow-group"><span class="tone-dot">2</span><span class="main-char">房</span></div>
+                <div class="flow-group"><span class="tone-dot">3</span><span class="main-char">访</span></div>
+                <div class="flow-group"><span class="tone-dot">4</span><span class="main-char">放</span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-card">
+          <header class="demo-title">
+            <h2><span class="badge">3</span>声调标签组</h2>
+            <p>不展示空声调，每个声母下面只列出有内容的声调。信息密度更高，适合移动端长列表。</p>
+          </header>
+          <div class="phone">
+            <div class="chips" aria-hidden="true">
+              <span class="chip"></span><span class="chip"></span><span class="chip"></span>
+              <span class="chip"></span><span class="chip"></span><span class="chip"></span>
+            </div>
+            <div class="tone-legend">
+              <span>声调</span><b>1</b><b>2</b><b class="active">3</b><b>4</b><span class="ai-bubble">AI</span>
+            </div>
+
+            <div class="tag-row">
+              <div class="row-head"><strong>b</strong><span>+ ang</span></div>
+              <div class="tone-stack">
+                <div class="tag-line selected"><b>1</b><div class="tag-chars"><span class="main-char">帮</span></div></div>
+                <div class="tag-line"><b>3</b><div class="tag-chars"><span class="main-char">绑</span><small>膀</small><small>榜</small></div></div>
+                <div class="tag-line"><b>4</b><div class="tag-chars"><span class="main-char">棒</span><small>蚌</small><small>傍</small></div></div>
+              </div>
+            </div>
+            <div class="tag-row">
+              <div class="row-head"><strong>p</strong><span>+ ang</span></div>
+              <div class="tone-stack">
+                <div class="tag-line selected"><b>1</b><div class="tag-chars"><span class="main-char">膀</span><small>乓</small></div></div>
+                <div class="tag-line"><b>2</b><div class="tag-chars"><span class="main-char">旁</span><small>膀</small></div></div>
+                <div class="tag-line"><b>4</b><div class="tag-chars"><span class="main-char">胖</span></div></div>
+              </div>
+            </div>
+            <div class="tag-row">
+              <div class="row-head"><strong>m</strong><span>+ ang</span></div>
+              <div class="tone-stack">
+                <div class="tag-line"><b>2</b><div class="tag-chars"><span class="main-char">忙</span><small>盲</small><small>芒</small><small>茫</small></div></div>
+              </div>
+            </div>
+            <div class="tag-row">
+              <div class="row-head"><strong>f</strong><span>+ ang</span></div>
+              <div class="tone-stack">
+                <div class="tag-line selected"><b>1</b><div class="tag-chars"><span class="main-char">方</span><small>芳</small><small>坊</small></div></div>
+                <div class="tag-line"><b>2</b><div class="tag-chars"><span class="main-char">房</span><small>防</small><small>妨</small></div></div>
+                <div class="tag-line"><b>3</b><div class="tag-chars"><span class="main-char">访</span></div></div>
+                <div class="tag-line"><b>4</b><div class="tag-chars"><span class="main-char">放</span></div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-card">
+          <header class="demo-title">
+            <h2><span class="badge">4</span>聚合卡片</h2>
+            <p>把每个声母 + 韵母组合做成独立结果卡。最像搜索结果页，稀疏时视觉完整度最好。</p>
+          </header>
+          <div class="phone">
+            <div class="chips" aria-hidden="true">
+              <span class="chip"></span><span class="chip"></span><span class="chip"></span>
+              <span class="chip"></span><span class="chip"></span><span class="chip"></span>
+            </div>
+            <div class="tone-legend">
+              <span>声调</span><b>1</b><b>2</b><b class="active">3</b><b>4</b><span class="ai-bubble">AI</span>
+            </div>
+
+            <div class="tile-list">
+              <section class="rhyme-tile selected">
+                <div class="tile-head"><strong>b</strong><span>+ ang</span></div>
+                <div class="tile-body">
+                  <div class="tile-tone"><b>一声</b><p><strong>帮</strong></p></div>
+                  <div class="tile-tone"><b>三声</b><p><strong>绑</strong> 膀 榜</p></div>
+                  <div class="tile-tone"><b>四声</b><p><strong>棒</strong> 蚌 傍</p></div>
+                </div>
+              </section>
+              <section class="rhyme-tile">
+                <div class="tile-head"><strong>p</strong><span>+ ang</span></div>
+                <div class="tile-body">
+                  <div class="tile-tone"><b>一声</b><p><strong>膀</strong> 乓</p></div>
+                  <div class="tile-tone"><b>二声</b><p><strong>旁</strong> 膀</p></div>
+                  <div class="tile-tone"><b>四声</b><p><strong>胖</strong></p></div>
+                </div>
+              </section>
+              <section class="rhyme-tile">
+                <div class="tile-head"><strong>m</strong><span>+ ang</span></div>
+                <div class="tile-body">
+                  <div class="tile-tone"><b>二声</b><p><strong>忙</strong> 盲 芒 茫</p></div>
+                </div>
+              </section>
+              <section class="rhyme-tile">
+                <div class="tile-head"><strong>f</strong><span>+ ang</span></div>
+                <div class="tile-body">
+                  <div class="tile-tone"><b>一声</b><p><strong>方</strong> 芳 坊</p></div>
+                  <div class="tile-tone"><b>二声</b><p><strong>房</strong> 防 妨 坊</p></div>
+                  <div class="tile-tone"><b>三声</b><p><strong>访</strong></p></div>
+                  <div class="tile-tone"><b>四声</b><p><strong>放</strong></p></div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

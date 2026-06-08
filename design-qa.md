@@ -14,9 +14,14 @@ Checks:
 - Tone labels are consolidated into one global legend; repeated row labels are removed.
 - Matching-tone result columns are highlighted.
 - Result rows prioritize the selected initial, then nearby initials.
-- Result tone slots expose more character options where data is available.
+- Result left labels are weaker and occupy less width.
+- Character options remove borders; each tone slot uses one larger lead character with smaller two-column alternatives.
+- Result modules are shorter so the first mobile viewport shows at least three initial groups.
+- Result list renders all available initial groups and scrolls internally like a contacts list.
+- Clicking an initial scrolls the result list to that initial's group.
+- Tone slots have no borders and keep equal widths.
+- Bottom copy/favorite/continue action bar is hidden.
 - Common-character filter is visible and enabled by default.
-- Bottom action bar no longer covers the first visible result row.
 - Shuffle, initial switching, selection, and continue-query flow work in Playwright.
 
 Remaining P3 polish:

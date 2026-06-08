@@ -46,21 +46,33 @@ try {
   const repeatedToneWords = await page.locator('text=一声').count();
   const ideaCount = await page.locator('.idea-chip').count();
   const activeToneSlots = await page.locator('.tone-slot.active-tone').count();
-  const firstRowBox = await page.locator('.result-row').first().boundingBox();
-  const barBox = await page.locator('.action-bar').boundingBox();
+  const thirdRowBox = await page.locator('.result-row').nth(2).boundingBox();
+  const actionBars = await page.locator('.action-bar').count();
+  const firstMainBorder = await page.locator('.char-chip.main').first().evaluate((node) => getComputedStyle(node).borderStyle);
+  const firstToneSlotBorder = await page.locator('.tone-slot').first().evaluate((node) => getComputedStyle(node).borderLeftStyle);
+  const toneSlotWidths = await page.locator('.result-row').first().locator('.tone-slot').evaluateAll((nodes) =>
+    nodes.map((node) => Math.round(node.getBoundingClientRect().width)),
+  );
+  const resultScroll = await page.locator('.result-list').evaluate((node) => ({
+    scrollHeight: node.scrollHeight,
+    clientHeight: node.clientHeight,
+    scrollTop: node.scrollTop,
+  }));
 
   assert(title === '韵脚画布', 'page title should render');
   assert(initials >= 20, 'initial selector should show many initials');
-  assert(rows === 4, 'result area should show four primary combinations');
+  assert(rows >= 20, 'result area should render all available initial combinations');
   assert(toneLegendCount === 1, 'tone legend should appear once');
   assert(readingRows === 0, 'top pinyin metadata row should be removed');
   assert(repeatedToneWords === 0, 'repeated tone words should be removed from rows');
   assert(ideaCount === 8, 'random inspiration should show eight options');
   assert(activeToneSlots === rows, 'matching tone should be highlighted in each result row');
-  assert(
-    firstRowBox && barBox && firstRowBox.y + firstRowBox.height < barBox.y,
-    'action bar should not cover first result row',
-  );
+  assert(actionBars === 0, 'bottom action bar should be hidden');
+  assert(thirdRowBox && thirdRowBox.y < 844, 'first screen should show the third initial result');
+  assert(firstMainBorder === 'none', 'character options should not use borders');
+  assert(firstToneSlotBorder === 'none', 'tone slots should not use borders');
+  assert(Math.max(...toneSlotWidths) - Math.min(...toneSlotWidths) <= 1, 'tone slots should have equal widths');
+  assert(resultScroll.scrollHeight > resultScroll.clientHeight, 'result list should scroll internally');
 
   await page.getByPlaceholder('输入中文词句').fill('银行');
   await page.waitForTimeout(200);
@@ -71,20 +83,24 @@ try {
   const ideasAfter = await page.locator('.idea-chip').allTextContents();
   assert(ideasAfter.length === 8, 'shuffle should keep eight inspiration choices');
 
-  await page.getByRole('button', { name: 'ch' }).click();
-  const adjacentRows = await page.locator('.result-row .row-head strong').allTextContents();
-  assert(
-    adjacentRows[0] === 'ch' && adjacentRows.includes('zh') && adjacentRows.includes('sh'),
-    `result rows should prioritize selected initial and nearby initials, got ${adjacentRows.join(',')}`,
-  );
-  const firstRowChars = await page.locator('.result-row').nth(1).locator('.char-chip').count();
+  await page.locator('.initial-grid').getByRole('button', { name: 'ch', exact: true }).click();
+  await page.waitForTimeout(800);
+  const selectedInitial = await page.locator('.result-row.selected .row-head strong').textContent();
+  const scrolledResult = await page.locator('.result-list').evaluate((node) => node.scrollTop);
+  const selectedRowTop = await page.locator('.result-row.selected').evaluate((node) => {
+    const parent = node.parentElement;
+    if (!parent) return 9999;
+    return node.getBoundingClientRect().top - parent.getBoundingClientRect().top;
+  });
+  assert(selectedInitial === 'ch', `selected result row should be ch, got ${selectedInitial}`);
+  assert(scrolledResult > 0, 'clicking an initial should scroll the result list');
+  assert(selectedRowTop >= -2 && selectedRowTop < 40, 'selected initial should scroll near the top of the result list');
+  const firstRowChars = await page.locator('.result-row.selected').locator('.char-chip').count();
   assert(firstRowChars >= 10, 'result groups should expose more character options');
 
   await page.locator('.idea-chip').first().click();
-  await page.getByRole('button', { name: /以此字继续/ }).click();
-  await page.waitForTimeout(200);
-  const queryAfterContinue = await page.getByPlaceholder('输入中文词句').inputValue();
-  assert(queryAfterContinue.length === 1, 'continue action should query selected character');
+  const selectedIdeas = await page.locator('.idea-chip.selected').count();
+  assert(selectedIdeas === 1, 'clicking an inspiration option should select it');
 
   console.log(
     JSON.stringify(
@@ -98,8 +114,13 @@ try {
         ideaCount,
         readingRows,
         activeToneSlots,
-        adjacentRows,
-        queryAfterContinue,
+        selectedInitial,
+        scrolledResult,
+        selectedRowTop,
+        actionBars,
+        firstMainBorder,
+        firstToneSlotBorder,
+        toneSlotWidths,
         screenshot: 'qa-mobile-viewport.png',
       },
       null,

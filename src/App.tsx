@@ -1,13 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  ArrowRight,
   CheckCircle2,
-  Clipboard,
   Code2,
   History,
   Search,
   Shuffle,
-  Star,
   X,
 } from 'lucide-react';
 import data from './data/rhyme-index.json';
@@ -80,34 +77,15 @@ function pickRandom(items: RhymeItem[], seed: number) {
   return pool.slice(0, 8);
 }
 
-function adjacentInitials(selected: string, available: string[]) {
-  if (!available.length) return [];
-  const selectedIndex = Math.max(0, available.indexOf(selected));
-  const neighbors = available
-    .filter((initial) => initial !== selected)
-    .sort((a, b) => {
-      const aDistance = Math.abs(available.indexOf(a) - selectedIndex);
-      const bDistance = Math.abs(available.indexOf(b) - selectedIndex);
-      return aDistance - bDistance || available.indexOf(a) - available.indexOf(b);
-    });
-  return [available[selectedIndex], ...neighbors].filter(Boolean).slice(0, 4);
-}
-
 function App() {
   const [query, setQuery] = useState('月光');
   const [readingIndex, setReadingIndex] = useState(0);
-  const [selectedInitial, setSelectedInitial] = useState('w');
+  const [selectedInitial, setSelectedInitial] = useState('b');
   const [commonOnly, setCommonOnly] = useState(true);
   const [randomSeed, setRandomSeed] = useState(7);
   const [selectedChar, setSelectedChar] = useState('望');
-  const [toast, setToast] = useState('');
-  const [saved, setSaved] = useState<string[]>(() => {
-    try {
-      return JSON.parse(localStorage.getItem('saved-rhymes') ?? '[]') as string[];
-    } catch {
-      return [];
-    }
-  });
+  const resultListRef = useRef<HTMLDivElement | null>(null);
+  const resultRefs = useRef(new Map<string, HTMLElement>());
 
   const targetChar = lastHanChar(query);
   const readings = useMemo(() => mergeReadings(targetChar), [targetChar]);
@@ -131,9 +109,7 @@ function App() {
   }, [availableInitials, selectedInitial]);
 
   const displayInitials = index.initials;
-  const visibleInitials = useMemo(() => {
-    return adjacentInitials(selectedInitial, availableInitials);
-  }, [availableInitials, selectedInitial]);
+  const visibleInitials = availableInitials;
 
   const allCurrentItems = useMemo(() => {
     return uniqueByChar(
@@ -148,17 +124,6 @@ function App() {
     [allCurrentItems, randomSeed],
   );
 
-  const showToast = (message: string) => {
-    setToast(message);
-    window.setTimeout(() => setToast(''), 1600);
-  };
-
-  const copyChar = async (char: string) => {
-    setSelectedChar(char);
-    await navigator.clipboard?.writeText(char);
-    showToast(`已复制「${char}」`);
-  };
-
   const continueWith = (char = selectedChar) => {
     if (!char) return;
     setQuery(char);
@@ -166,14 +131,17 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const toggleSave = () => {
-    if (!selectedChar) return;
-    const next = saved.includes(selectedChar)
-      ? saved.filter((char) => char !== selectedChar)
-      : [selectedChar, ...saved].slice(0, 12);
-    setSaved(next);
-    localStorage.setItem('saved-rhymes', JSON.stringify(next));
-    showToast(saved.includes(selectedChar) ? '已取消收藏' : `已收藏「${selectedChar}」`);
+  const chooseInitial = (initial: string) => {
+    setSelectedInitial(initial);
+    requestAnimationFrame(() => {
+      const target = resultRefs.current.get(initial);
+      const list = resultListRef.current;
+      if (!target || !list) return;
+      list.scrollTo({
+        top: target.offsetTop,
+        behavior: 'smooth',
+      });
+    });
   };
 
   return (
@@ -256,7 +224,7 @@ function App() {
                 key={initial}
                 disabled={disabled}
                 className={initial === selectedInitial ? 'active' : ''}
-                onClick={() => setSelectedInitial(initial)}
+                onClick={() => chooseInitial(initial)}
               >
                 {initial}
               </button>
@@ -275,12 +243,20 @@ function App() {
           ))}
         </div>
 
-        <div className="result-list">
+        <div className="result-list" ref={resultListRef}>
           {visibleInitials.map((initial) => {
             const group = rhymeGroups[initial];
             return (
-              <article className={initial === selectedInitial ? 'result-row selected' : 'result-row'} key={initial}>
-                <button className="row-head" type="button" onClick={() => setSelectedInitial(initial)}>
+              <article
+                className={initial === selectedInitial ? 'result-row selected' : 'result-row'}
+                data-initial={initial}
+                key={initial}
+                ref={(node) => {
+                  if (node) resultRefs.current.set(initial, node);
+                  else resultRefs.current.delete(initial);
+                }}
+              >
+                <button className="row-head" type="button" onClick={() => chooseInitial(initial)}>
                   <strong>{initial}</strong>
                   <span>+ {activeReading?.rhyme}</span>
                 </button>
@@ -332,33 +308,6 @@ function App() {
         </div>
       </section>
 
-      {saved.length > 0 && (
-        <section className="saved-strip" aria-label="收藏">
-          <span>收藏</span>
-          {saved.slice(0, 6).map((char) => (
-            <button type="button" key={char} onClick={() => setSelectedChar(char)}>
-              {char}
-            </button>
-          ))}
-        </section>
-      )}
-
-      <nav className="action-bar" aria-label="操作">
-        <button type="button" onClick={() => selectedChar && copyChar(selectedChar)}>
-          <Clipboard size={22} />
-          复制
-        </button>
-        <button type="button" onClick={toggleSave}>
-          <Star size={22} />
-          收藏
-        </button>
-        <button type="button" className="primary" onClick={() => continueWith()}>
-          <ArrowRight size={24} />
-          以此字继续
-        </button>
-      </nav>
-
-      {toast && <div className="toast">{toast}</div>}
     </main>
   );
 }
