@@ -11,7 +11,7 @@ import {
   X,
 } from 'lucide-react';
 import data from './data/rhyme-index.json';
-import { lastHanChar, readingsForChar, toneName, type Reading, type Tone } from './rhyme';
+import { lastHanChar, readingsForChar, type Reading, type Tone } from './rhyme';
 import './styles.css';
 
 const REPO_URL = 'https://github.com/holynova/char_finder';
@@ -60,14 +60,6 @@ function hasItems(group: RhymeGroup | undefined, commonOnly: boolean) {
   return TONES.some((tone) => toneItems(group, tone, commonOnly).length > 0);
 }
 
-function groupWeight(group: RhymeGroup | undefined, commonOnly: boolean) {
-  if (!group) return 0;
-  return TONES.reduce((score, tone) => {
-    const items = toneItems(group, tone, commonOnly);
-    return score + Math.min(items.length, 3);
-  }, 0);
-}
-
 function uniqueByChar(items: RhymeItem[]) {
   return [...new Map(items.map((item) => [item.char, item])).values()];
 }
@@ -85,7 +77,20 @@ function pickRandom(items: RhymeItem[], seed: number) {
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
 
-  return pool.slice(0, 5);
+  return pool.slice(0, 8);
+}
+
+function adjacentInitials(selected: string, available: string[]) {
+  if (!available.length) return [];
+  const selectedIndex = Math.max(0, available.indexOf(selected));
+  const neighbors = available
+    .filter((initial) => initial !== selected)
+    .sort((a, b) => {
+      const aDistance = Math.abs(available.indexOf(a) - selectedIndex);
+      const bDistance = Math.abs(available.indexOf(b) - selectedIndex);
+      return aDistance - bDistance || available.indexOf(a) - available.indexOf(b);
+    });
+  return [available[selectedIndex], ...neighbors].filter(Boolean).slice(0, 4);
 }
 
 function App() {
@@ -127,16 +132,8 @@ function App() {
 
   const displayInitials = index.initials;
   const visibleInitials = useMemo(() => {
-    const ordered = [selectedInitial, ...availableInitials]
-      .filter(Boolean)
-      .filter((initial, indexValue, list) => list.indexOf(initial) === indexValue)
-      .sort((a, b) => {
-        if (a === selectedInitial) return -1;
-        if (b === selectedInitial) return 1;
-        return groupWeight(rhymeGroups[b], commonOnly) - groupWeight(rhymeGroups[a], commonOnly);
-      });
-    return ordered.slice(0, 4);
-  }, [availableInitials, commonOnly, rhymeGroups, selectedInitial]);
+    return adjacentInitials(selectedInitial, availableInitials);
+  }, [availableInitials, selectedInitial]);
 
   const allCurrentItems = useMemo(() => {
     return uniqueByChar(
@@ -217,45 +214,8 @@ function App() {
         </button>
       </section>
 
-      <section className="reading-row" aria-label="读音信息">
-        {activeReading ? (
-          <>
-            <div className="reading-meta">
-              <span>{activeReading.pinyin}</span>
-              <i />
-              <span>{activeReading.initial || '零声母'}</span>
-              <i />
-              <span>{activeReading.rhyme}</span>
-              <i />
-              <span>{activeReading.tone}</span>
-            </div>
-            <div className="reading-tabs">
-              {readings.map((reading, indexValue) => (
-                <button
-                  type="button"
-                  key={reading.pinyin}
-                  className={indexValue === readingIndex ? 'active' : ''}
-                  onClick={() => setReadingIndex(indexValue)}
-                >
-                  {reading.pinyin}
-                </button>
-              ))}
-            </div>
-          </>
-        ) : (
-          <p className="empty-reading">请输入至少一个中文汉字</p>
-        )}
-      </section>
-
       <section className="inspiration section-line" aria-label="随机灵感">
-        <div className="section-title">
-          <h2>随机灵感</h2>
-          <button type="button" onClick={() => setRandomSeed(Date.now())}>
-            <Shuffle size={16} />
-            换一批
-          </button>
-        </div>
-        <div className="inspiration-grid">
+        <div className="inspiration-row">
           {inspiration.map((item) => (
             <button
               type="button"
@@ -267,6 +227,9 @@ function App() {
               {item.char}
             </button>
           ))}
+          <button className="shuffle-btn" type="button" onClick={() => setRandomSeed(Date.now())} aria-label="换一批">
+            <Shuffle size={16} />
+          </button>
           {!inspiration.length && <p className="muted">没有找到可用的常用押韵字。</p>}
         </div>
       </section>
@@ -306,9 +269,8 @@ function App() {
         <div className="tone-legend">
           <span>声调</span>
           {TONES.map((tone) => (
-            <b key={tone}>
+            <b className={tone === activeReading?.tone ? 'active' : ''} key={tone}>
               <i>{tone}</i>
-              {toneName(tone)}
             </b>
           ))}
         </div>
@@ -327,9 +289,12 @@ function App() {
                     const items = toneItems(group, tone, commonOnly).filter(
                       (item) => item.char !== targetChar,
                     );
-                    const [primary, ...rest] = items.slice(0, 3);
+                    const [primary, ...rest] = items.slice(0, 5);
                     return (
-                      <div className="tone-slot" key={`${initial}-${tone}`}>
+                      <div
+                        className={tone === activeReading?.tone ? 'tone-slot active-tone' : 'tone-slot'}
+                        key={`${initial}-${tone}`}
+                      >
                         {primary ? (
                           <>
                             <button

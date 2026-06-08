@@ -42,8 +42,10 @@ try {
   const initials = await page.locator('.initial-grid button').count();
   const rows = await page.locator('.result-row').count();
   const toneLegendCount = await page.locator('.tone-legend').count();
+  const readingRows = await page.locator('.reading-row').count();
   const repeatedToneWords = await page.locator('text=一声').count();
   const ideaCount = await page.locator('.idea-chip').count();
+  const activeToneSlots = await page.locator('.tone-slot.active-tone').count();
   const firstRowBox = await page.locator('.result-row').first().boundingBox();
   const barBox = await page.locator('.action-bar').boundingBox();
 
@@ -51,8 +53,10 @@ try {
   assert(initials >= 20, 'initial selector should show many initials');
   assert(rows === 4, 'result area should show four primary combinations');
   assert(toneLegendCount === 1, 'tone legend should appear once');
+  assert(readingRows === 0, 'top pinyin metadata row should be removed');
   assert(repeatedToneWords === 0, 'repeated tone words should be removed from rows');
-  assert(ideaCount === 5, 'random inspiration should show five options');
+  assert(ideaCount === 8, 'random inspiration should show eight options');
+  assert(activeToneSlots === rows, 'matching tone should be highlighted in each result row');
   assert(
     firstRowBox && barBox && firstRowBox.y + firstRowBox.height < barBox.y,
     'action bar should not cover first result row',
@@ -60,12 +64,21 @@ try {
 
   await page.getByPlaceholder('输入中文词句').fill('银行');
   await page.waitForTimeout(200);
-  const tabs = await page.locator('.reading-tabs button').allTextContents();
-  assert(tabs.includes('xing2') && tabs.includes('hang2'), 'polyphonic target should expose readings');
+  const metadataRowsAfterInput = await page.locator('.reading-row').count();
+  assert(metadataRowsAfterInput === 0, 'polyphonic pinyin display should stay hidden after input');
 
   await page.getByRole('button', { name: '换一批' }).click();
   const ideasAfter = await page.locator('.idea-chip').allTextContents();
-  assert(ideasAfter.length === 5, 'shuffle should keep five inspiration choices');
+  assert(ideasAfter.length === 8, 'shuffle should keep eight inspiration choices');
+
+  await page.getByRole('button', { name: 'ch' }).click();
+  const adjacentRows = await page.locator('.result-row .row-head strong').allTextContents();
+  assert(
+    adjacentRows[0] === 'ch' && adjacentRows.includes('zh') && adjacentRows.includes('sh'),
+    `result rows should prioritize selected initial and nearby initials, got ${adjacentRows.join(',')}`,
+  );
+  const firstRowChars = await page.locator('.result-row').nth(1).locator('.char-chip').count();
+  assert(firstRowChars >= 10, 'result groups should expose more character options');
 
   await page.locator('.idea-chip').first().click();
   await page.getByRole('button', { name: /以此字继续/ }).click();
@@ -83,7 +96,9 @@ try {
         toneLegendCount,
         repeatedToneWords,
         ideaCount,
-        tabs,
+        readingRows,
+        activeToneSlots,
+        adjacentRows,
         queryAfterContinue,
         screenshot: 'qa-mobile-viewport.png',
       },
