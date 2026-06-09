@@ -47,6 +47,7 @@ try {
   const cardToneLabels = await page.locator('.card-tone b').count();
   const ideaCount = await page.locator('.idea-chip').count();
   const activeToneRows = await page.locator('.card-tone.active-tone').count();
+  const selectedResultCards = await page.locator('.result-card.selected').count();
   const thirdRowBox = await page.locator('.result-card').nth(2).boundingBox();
   const actionBars = await page.locator('.action-bar').count();
   const firstMainBorder = await page.locator('.char-chip.main').first().evaluate((node) => getComputedStyle(node).borderStyle);
@@ -65,6 +66,7 @@ try {
   assert(cardToneLabels > rows, 'result cards should group characters under tone labels');
   assert(ideaCount === 8, 'random inspiration should show eight options');
   assert(activeToneRows > 0, 'matching tone rows should be highlighted when available');
+  assert(selectedResultCards === 0, 'result cards should not have a selected visual state');
   assert(actionBars === 0, 'bottom action bar should be hidden');
   assert(thirdRowBox && thirdRowBox.y < 844, 'first screen should show the third initial result');
   assert(firstMainBorder === 'none', 'character options should not use borders');
@@ -81,18 +83,36 @@ try {
 
   await page.locator('.initial-grid').getByRole('button', { name: 'ch', exact: true }).click();
   await page.waitForTimeout(800);
-  const selectedInitial = await page.locator('.result-card.selected .row-head strong').textContent();
+  const selectedInitial = await page.locator('.initial-grid button.active').textContent();
   const scrolledResult = await page.locator('.result-list').evaluate((node) => node.scrollTop);
-  const selectedRowTop = await page.locator('.result-card.selected').evaluate((node) => {
+  const firstVisibleInitial = await page.locator('.result-list').evaluate((node) => {
+    const listTop = node.getBoundingClientRect().top;
+    const firstVisible = [...node.querySelectorAll('.result-card')].find(
+      (card) => card.getBoundingClientRect().bottom > listTop + 1,
+    );
+    return firstVisible?.querySelector('.row-head strong')?.textContent ?? '';
+  });
+  const selectedRowTop = await page.locator('.result-card[data-initial="ch"]').evaluate((node) => {
     const parent = node.parentElement;
     if (!parent) return 9999;
     return node.getBoundingClientRect().top - parent.getBoundingClientRect().top;
   });
-  assert(selectedInitial === 'ch', `selected result row should be ch, got ${selectedInitial}`);
+  assert(selectedInitial === 'ch', `selected initial button should be ch, got ${selectedInitial}`);
+  assert(firstVisibleInitial === 'ch', `first visible result should be ch, got ${firstVisibleInitial}`);
   assert(scrolledResult > 0, 'clicking an initial should scroll the result list');
   assert(selectedRowTop >= -2 && selectedRowTop < 40, 'selected initial should scroll near the top of the result list');
-  const firstRowChars = await page.locator('.result-card.selected').locator('.char-chip').count();
+  const resultCardsAfterScroll = await page.locator('.result-card.selected').count();
+  assert(resultCardsAfterScroll === 0, 'clicking an initial should not mark result cards selected');
+  const firstRowChars = await page.locator('.result-card[data-initial="ch"]').locator('.char-chip').count();
   assert(firstRowChars >= 10, 'result groups should expose more character options');
+
+  await page.locator('.result-list').evaluate((node) => {
+    node.scrollTop = 0;
+    node.dispatchEvent(new Event('scroll', { bubbles: true }));
+  });
+  await page.waitForFunction(() => document.querySelector('.initial-grid button.active')?.textContent === 'b');
+  const syncedInitial = await page.locator('.initial-grid button.active').textContent();
+  assert(syncedInitial === 'b', `scrolling result list should sync active initial to b, got ${syncedInitial}`);
 
   await page.locator('.idea-chip').first().click();
   const selectedIdeas = await page.locator('.idea-chip.selected').count();
@@ -111,7 +131,9 @@ try {
         ideaCount,
         readingRows,
         activeToneRows,
+        selectedResultCards,
         selectedInitial,
+        firstVisibleInitial,
         scrolledResult,
         selectedRowTop,
         actionBars,

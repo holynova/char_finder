@@ -150,6 +150,22 @@ function App() {
     });
   };
 
+  const syncInitialFromScroll = () => {
+    const list = resultListRef.current;
+    if (!list) return;
+
+    const listTop = list.getBoundingClientRect().top;
+    const firstVisible = visibleInitials.find((initial) => {
+      const row = resultRefs.current.get(initial);
+      if (!row) return false;
+      return row.getBoundingClientRect().bottom > listTop + 1;
+    });
+
+    if (firstVisible && firstVisible !== selectedInitial) {
+      setSelectedInitial(firstVisible);
+    }
+  };
+
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -240,7 +256,7 @@ function App() {
       </section>
 
       <section className="results section-line" aria-label="押韵结果">
-        <div className="result-list" ref={resultListRef}>
+        <div className="result-list" ref={resultListRef} onScroll={syncInitialFromScroll}>
           {visibleInitials.map((initial) => {
             const group = rhymeGroups[initial];
             const toneRows = TONES.map((tone) => ({
@@ -252,7 +268,7 @@ function App() {
 
             return (
               <article
-                className={initial === selectedInitial ? 'result-card selected' : 'result-card'}
+                className="result-card"
                 data-initial={initial}
                 key={initial}
                 ref={(node) => {

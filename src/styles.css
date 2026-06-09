@@ -379,12 +379,6 @@ h2 {
     box-shadow 120ms;
 }
 
-.result-card.selected {
-  border-color: color-mix(in srgb, var(--clay) 32%, var(--g200));
-  background: color-mix(in srgb, var(--clay) 3%, var(--paper));
-  box-shadow: inset 2px 0 0 var(--clay);
-}
-
 .row-head {
   display: flex;
   flex-direction: column;
@@ -493,18 +487,6 @@ h2 {
 @media (max-width: 380px) {
   .app-shell {
     padding-inline: 14px;
-  }
-
-  .font-debug {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .font-preview {
-    display: none;
-  }
-
-  .font-note {
-    display: none;
   }
 
   .initial-grid {
