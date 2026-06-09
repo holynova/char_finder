@@ -13,6 +13,12 @@ import './styles.css';
 
 const REPO_URL = 'https://github.com/holynova/char_finder';
 const TONES: Tone[] = [1, 2, 3, 4];
+const TONE_LABELS: Record<Tone, string> = {
+  1: '1声',
+  2: '2声',
+  3: '3声',
+  4: '4声',
+};
 
 type RhymeItem = {
   char: string;
@@ -234,21 +240,19 @@ function App() {
       </section>
 
       <section className="results section-line" aria-label="押韵结果">
-        <div className="tone-legend">
-          <span>声调</span>
-          {TONES.map((tone) => (
-            <b className={tone === activeReading?.tone ? 'active' : ''} key={tone}>
-              <i>{tone}</i>
-            </b>
-          ))}
-        </div>
-
         <div className="result-list" ref={resultListRef}>
           {visibleInitials.map((initial) => {
             const group = rhymeGroups[initial];
+            const toneRows = TONES.map((tone) => ({
+              tone,
+              items: toneItems(group, tone, commonOnly)
+                .filter((item) => item.char !== targetChar)
+                .slice(0, 5),
+            })).filter(({ items }) => items.length > 0);
+
             return (
               <article
-                className={initial === selectedInitial ? 'result-row selected' : 'result-row'}
+                className={initial === selectedInitial ? 'result-card selected' : 'result-card'}
                 data-initial={initial}
                 key={initial}
                 ref={(node) => {
@@ -260,19 +264,18 @@ function App() {
                   <strong>{initial}</strong>
                   <span>+ {activeReading?.rhyme}</span>
                 </button>
-                <div className="tone-slots">
-                  {TONES.map((tone) => {
-                    const items = toneItems(group, tone, commonOnly).filter(
-                      (item) => item.char !== targetChar,
-                    );
-                    const [primary, ...rest] = items.slice(0, 5);
-                    return (
-                      <div
-                        className={tone === activeReading?.tone ? 'tone-slot active-tone' : 'tone-slot'}
-                        key={`${initial}-${tone}`}
-                      >
-                        {primary ? (
-                          <>
+                <div className="card-tones">
+                  {toneRows.length ? (
+                    toneRows.map(({ tone, items }) => {
+                      const [primary, ...rest] = items;
+
+                      return (
+                        <div
+                          className={tone === activeReading?.tone ? 'card-tone active-tone' : 'card-tone'}
+                          key={`${initial}-${tone}`}
+                        >
+                          <b>{TONE_LABELS[tone]}</b>
+                          <div className="card-chars">
                             <button
                               type="button"
                               className={primary.char === selectedChar ? 'char-chip main selected' : 'char-chip main'}
@@ -281,26 +284,24 @@ function App() {
                             >
                               {primary.char}
                             </button>
-                            <div className="mini-chips">
-                              {rest.map((item) => (
-                                <button
-                                  type="button"
-                                  className={item.char === selectedChar ? 'char-chip selected' : 'char-chip'}
-                                  key={`${item.char}-${item.pinyin}`}
-                                  onClick={() => setSelectedChar(item.char)}
-                                  onDoubleClick={() => continueWith(item.char)}
-                                >
-                                  {item.char}
-                                </button>
-                              ))}
-                            </div>
-                          </>
-                        ) : (
-                          <span className="empty-tone">-</span>
-                        )}
-                      </div>
-                    );
-                  })}
+                            {rest.map((item) => (
+                              <button
+                                type="button"
+                                className={item.char === selectedChar ? 'char-chip selected' : 'char-chip'}
+                                key={`${item.char}-${item.pinyin}`}
+                                onClick={() => setSelectedChar(item.char)}
+                                onDoubleClick={() => continueWith(item.char)}
+                              >
+                                {item.char}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="empty-card">当前筛选下没有可展示的押韵字。</p>
+                  )}
                 </div>
               </article>
             );
