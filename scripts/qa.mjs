@@ -51,6 +51,10 @@ try {
   const thirdRowBox = await page.locator('.result-card').nth(2).boundingBox();
   const actionBars = await page.locator('.action-bar').count();
   const firstMainBorder = await page.locator('.char-chip.main').first().evaluate((node) => getComputedStyle(node).borderStyle);
+  await page.evaluate(() => document.fonts.ready);
+  const hasBundledFont = await page.evaluate(() =>
+    [...document.fonts].some((font) => font.family === 'LXGW WenKai Screen'),
+  );
   const resultScroll = await page.locator('.result-list').evaluate((node) => ({
     scrollHeight: node.scrollHeight,
     clientHeight: node.clientHeight,
@@ -68,6 +72,7 @@ try {
   assert(activeToneRows > 0, 'matching tone rows should be highlighted when available');
   assert(selectedResultCards === 0, 'result cards should not have a selected visual state');
   assert(actionBars === 0, 'bottom action bar should be hidden');
+  assert(hasBundledFont, 'bundled LXGW WenKai Screen font should be registered');
   assert(thirdRowBox && thirdRowBox.y < 844, 'first screen should show the third initial result');
   assert(firstMainBorder === 'none', 'character options should not use borders');
   assert(resultScroll.scrollHeight > resultScroll.clientHeight, 'result list should scroll internally');
@@ -137,6 +142,7 @@ try {
         scrolledResult,
         selectedRowTop,
         actionBars,
+        hasBundledFont,
         firstMainBorder,
         screenshot: 'qa-mobile-viewport.png',
       },
