@@ -300,16 +300,71 @@ h2 {
 .common-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  color: var(--olive);
-  font-size: 14px;
+  min-height: 32px;
+  gap: 6px;
+  border: 1.5px solid var(--g200);
+  border-radius: 8px;
+  padding: 4px 8px 4px 5px;
+  color: var(--g500);
+  background: var(--paper);
+  font-size: 13px;
+  line-height: 1;
   white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-color 120ms,
+    background 120ms,
+    color 120ms;
 }
 
 .common-toggle input {
   position: absolute;
   opacity: 0;
   pointer-events: none;
+}
+
+.common-toggle svg {
+  color: var(--g300);
+  transition: color 120ms;
+}
+
+.common-toggle.active {
+  border-color: color-mix(in srgb, var(--olive) 55%, var(--g200));
+  color: var(--olive);
+  background: color-mix(in srgb, var(--olive) 9%, var(--paper));
+}
+
+.common-toggle.active svg {
+  color: var(--olive);
+}
+
+.toggle-track {
+  position: relative;
+  display: inline-flex;
+  width: 28px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--g300);
+  transition: background 120ms;
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--paper);
+  transition: transform 120ms;
+}
+
+.common-toggle.active .toggle-track {
+  background: var(--olive);
+}
+
+.common-toggle.active .toggle-thumb {
+  transform: translateX(12px);
 }
 
 .initial-grid {
@@ -448,6 +503,7 @@ h2 {
 
 .char-chip {
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   min-width: 0;
@@ -474,9 +530,19 @@ h2 {
 .card-chars {
   display: flex;
   min-width: 0;
-  flex-wrap: wrap;
+  max-width: 100%;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 3px 8px;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.card-chars::-webkit-scrollbar {
+  display: none;
 }
 
 .empty-card {
@@ -505,9 +571,17 @@ h2 {
     font-size: 29px;
   }
 
+  .char-chip {
+    font-size: 21px;
+  }
+
   .card-tone {
     grid-template-columns: 26px 1fr;
-    gap: 7px;
+    gap: 6px;
     padding-inline: 5px;
+  }
+
+  .card-chars {
+    gap: 7px;
   }
 }

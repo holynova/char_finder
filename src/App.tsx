@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   CheckCircle2,
   Code2,
-  History,
   Search,
   Shuffle,
   X,
@@ -83,6 +82,15 @@ function pickRandom(items: RhymeItem[], seed: number) {
   return pool.slice(0, 8);
 }
 
+function pickToneFirstRandom(items: RhymeItem[], preferredTone: Tone | undefined, seed: number) {
+  if (!preferredTone) return pickRandom(items, seed);
+
+  const preferred = items.filter((item) => Number(item.pinyin.match(/[1-4]$/u)?.[0]) === preferredTone);
+  const fallback = items.filter((item) => Number(item.pinyin.match(/[1-4]$/u)?.[0]) !== preferredTone);
+
+  return [...pickRandom(preferred, seed), ...pickRandom(fallback, seed + 1)].slice(0, 8);
+}
+
 function App() {
   const [query, setQuery] = useState('月光');
   const [readingIndex, setReadingIndex] = useState(0);
@@ -126,8 +134,8 @@ function App() {
   }, [commonOnly, rhymeGroups, targetChar]);
 
   const inspiration = useMemo(
-    () => pickRandom(allCurrentItems.slice(0, 80), randomSeed),
-    [allCurrentItems, randomSeed],
+    () => pickToneFirstRandom(allCurrentItems.slice(0, 80), activeReading?.tone, randomSeed),
+    [activeReading?.tone, allCurrentItems, randomSeed],
   );
 
   const continueWith = (char = selectedChar) => {
@@ -177,9 +185,6 @@ function App() {
           <a className="icon-link" href={REPO_URL} aria-label="GitHub repository">
             <Code2 size={20} />
           </a>
-          <button className="icon-link" type="button" aria-label="查看历史">
-            <History size={20} />
-          </button>
         </div>
       </header>
 
@@ -227,14 +232,17 @@ function App() {
       <section className="initials section-line" aria-label="选择声母">
         <div className="section-title">
           <h2>选择声母</h2>
-          <label className="common-toggle">
+          <label className={commonOnly ? 'common-toggle active' : 'common-toggle'}>
             <input
               type="checkbox"
               checked={commonOnly}
               onChange={(event) => setCommonOnly(event.target.checked)}
             />
-            <CheckCircle2 size={16} />
-            常用字已过滤
+            <span className="toggle-track" aria-hidden="true">
+              <span className="toggle-thumb" />
+            </span>
+            <CheckCircle2 size={15} />
+            <span>{commonOnly ? '常用字过滤' : '显示全部字'}</span>
           </label>
         </div>
         <div className="initial-grid">
@@ -263,7 +271,7 @@ function App() {
               tone,
               items: toneItems(group, tone, commonOnly)
                 .filter((item) => item.char !== targetChar)
-                .slice(0, 5),
+                .slice(0, 15),
             })).filter(({ items }) => items.length > 0);
 
             return (

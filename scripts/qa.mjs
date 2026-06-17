@@ -1,8 +1,10 @@
 import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
+import data from '../src/data/rhyme-index.json' with { type: 'json' };
 
 const explicitUrl = process.env.QA_URL;
 const url = explicitUrl ?? 'http://127.0.0.1:4173/';
+const TONES = [1, 2, 3, 4];
 
 let server;
 if (!explicitUrl) {
@@ -25,6 +27,14 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 
+function uniqueByChar(items) {
+  return [...new Map(items.map((item) => [item.char, item])).values()];
+}
+
+function pinyinTone(item) {
+  return Number(item.pinyin.match(/[1-4]$/u)?.[0]);
+}
+
 let browser;
 
 try {
@@ -43,6 +53,7 @@ try {
   const rows = await page.locator('.result-card').count();
   const toneLegendCount = await page.locator('.tone-legend').count();
   const fontDebugCount = await page.locator('.font-debug').count();
+  const historyButtons = await page.getByRole('button', { name: '查看历史' }).count();
   const readingRows = await page.locator('.reading-row').count();
   const cardToneLabels = await page.locator('.card-tone b').count();
   const ideaCount = await page.locator('.idea-chip').count();
@@ -60,15 +71,39 @@ try {
     clientHeight: node.clientHeight,
     scrollTop: node.scrollTop,
   }));
+  const longestToneRow = await page.locator('.card-chars').evaluateAll((nodes) =>
+    nodes
+      .map((node) => ({
+        chipCount: node.querySelectorAll('.char-chip').length,
+        clientHeight: node.clientHeight,
+        clientWidth: node.clientWidth,
+        flexWrap: getComputedStyle(node).flexWrap,
+        scrollWidth: node.scrollWidth,
+      }))
+      .sort((a, b) => b.chipCount - a.chipCount)[0],
+  );
+  const defaultReading = data.characters['光'][0];
+  const defaultItems = uniqueByChar(
+    Object.values(data.groups[defaultReading.rhyme]).flatMap((group) =>
+      TONES.flatMap((tone) => group.tones[String(tone)] ?? []),
+    ),
+  ).filter((item) => item.commonTier === 1 && item.char !== '光');
+  const sameTonePool = defaultItems.filter((item) => pinyinTone(item) === defaultReading.tone);
+  const defaultIdeas = await page.locator('.idea-chip').allTextContents();
+  const defaultIdeasPreferActiveTone =
+    sameTonePool.length >= defaultIdeas.length &&
+    defaultIdeas.every((char) => sameTonePool.some((item) => item.char === char));
 
   assert(title === '韵脚画布', 'page title should render');
   assert(initials >= 20, 'initial selector should show many initials');
   assert(rows >= 20, 'result area should render all available initial combinations');
   assert(toneLegendCount === 0, 'tone legend header should be removed from results');
   assert(fontDebugCount === 0, 'font debug picker should not ship');
+  assert(historyButtons === 0, 'unused history icon should not ship');
   assert(readingRows === 0, 'top pinyin metadata row should be removed');
   assert(cardToneLabels > rows, 'result cards should group characters under tone labels');
   assert(ideaCount === 8, 'random inspiration should show eight options');
+  assert(defaultIdeasPreferActiveTone, 'random inspiration should prefer matching-tone characters');
   assert(activeToneRows > 0, 'matching tone rows should be highlighted when available');
   assert(selectedResultCards === 0, 'result cards should not have a selected visual state');
   assert(actionBars === 0, 'bottom action bar should be hidden');
@@ -76,6 +111,18 @@ try {
   assert(thirdRowBox && thirdRowBox.y < 844, 'first screen should show the third initial result');
   assert(firstMainBorder === 'none', 'character options should not use borders');
   assert(resultScroll.scrollHeight > resultScroll.clientHeight, 'result list should scroll internally');
+  assert(longestToneRow.flexWrap === 'nowrap', 'same-tone result rows should not wrap');
+  assert(longestToneRow.clientHeight <= 36, 'same-tone result rows should stay one line tall on mobile');
+  assert(longestToneRow.scrollWidth > longestToneRow.clientWidth, 'long same-tone result rows should scroll horizontally');
+
+  const commonToggle = page.locator('.common-toggle');
+  assert((await commonToggle.textContent())?.includes('常用字过滤'), 'common filter should show enabled state');
+  assert((await commonToggle.getAttribute('class'))?.includes('active'), 'common filter should have enabled styling');
+  await commonToggle.click();
+  assert((await commonToggle.textContent())?.includes('显示全部字'), 'common filter should show disabled state');
+  assert(!(await commonToggle.getAttribute('class'))?.includes('active'), 'common filter should remove enabled styling');
+  await commonToggle.click();
+  assert((await commonToggle.textContent())?.includes('常用字过滤'), 'common filter should return to enabled state');
 
   await page.getByPlaceholder('输入中文词句').fill('银行');
   await page.waitForTimeout(200);
