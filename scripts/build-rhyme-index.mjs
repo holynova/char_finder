@@ -171,6 +171,7 @@ for (const entry of entries) {
     toneGroup.push({
       char: entry.char,
       pinyin: entry.pinyin,
+      final: entry.final,
       rank: entry.rank,
       commonTier: entry.commonTier,
       frequency: entry.frequency,

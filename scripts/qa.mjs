@@ -115,14 +115,65 @@ try {
   assert(longestToneRow.clientHeight <= 36, 'same-tone result rows should stay one line tall on mobile');
   assert(longestToneRow.scrollWidth > longestToneRow.clientWidth, 'long same-tone result rows should scroll horizontally');
 
-  const commonToggle = page.locator('.common-toggle');
-  assert((await commonToggle.textContent())?.includes('常用字过滤'), 'common filter should show enabled state');
-  assert((await commonToggle.getAttribute('class'))?.includes('active'), 'common filter should have enabled styling');
+  await page.locator('.result-list').evaluate((node) => {
+    node.scrollTop = node.scrollHeight;
+  });
+  await page.waitForFunction(() => {
+    const node = document.querySelector('.result-list');
+    if (!node) return false;
+    return node.scrollTop + node.clientHeight >= node.scrollHeight - 2;
+  });
+  const bottomReach = await page.locator('.result-list').evaluate((node) => {
+    const listRect = node.getBoundingClientRect();
+    const lastCard = node.querySelector('.result-card:last-child');
+    const lastRect = lastCard?.getBoundingClientRect();
+    return {
+      listBottom: listRect.bottom,
+      lastBottom: lastRect?.bottom ?? 0,
+    };
+  });
+  assert(
+    bottomReach.lastBottom <= bottomReach.listBottom + 1,
+    `result list should scroll to the final card, got last=${bottomReach.lastBottom}, list=${bottomReach.listBottom}`,
+  );
+  const rowHeadAlignment = await page.locator('.row-head').first().evaluate((node) => {
+    const styles = getComputedStyle(node);
+    return {
+      alignItems: styles.alignItems,
+      justifyContent: styles.justifyContent,
+      textAlign: styles.textAlign,
+    };
+  });
+  assert(rowHeadAlignment.alignItems === 'center', 'result left rail should center items horizontally');
+  assert(rowHeadAlignment.justifyContent === 'center', 'result left rail should center items vertically');
+  assert(rowHeadAlignment.textAlign === 'center', 'result left rail text should be centered');
+
+  const exactToggle = page.locator('.common-toggle').nth(0);
+  const commonToggle = page.locator('.common-toggle').nth(1);
+  assert((await exactToggle.textContent())?.includes('精确匹配韵母'), 'exact filter should show fixed label');
+  assert(!(await exactToggle.getAttribute('class'))?.includes('active'), 'exact filter should start disabled');
+  assert((await commonToggle.textContent())?.includes('生僻字'), 'rare filter should show fixed label');
+  assert(!(await commonToggle.getAttribute('class'))?.includes('active'), 'rare filter should start disabled');
   await commonToggle.click();
-  assert((await commonToggle.textContent())?.includes('显示全部字'), 'common filter should show disabled state');
-  assert(!(await commonToggle.getAttribute('class'))?.includes('active'), 'common filter should remove enabled styling');
+  assert((await commonToggle.textContent())?.includes('生僻字'), 'rare filter should keep fixed label when enabled');
+  assert((await commonToggle.getAttribute('class'))?.includes('active'), 'rare filter should have enabled styling');
   await commonToggle.click();
-  assert((await commonToggle.textContent())?.includes('常用字过滤'), 'common filter should return to enabled state');
+  assert((await commonToggle.textContent())?.includes('生僻字'), 'rare filter should keep fixed label when disabled');
+  assert(!(await commonToggle.getAttribute('class'))?.includes('active'), 'rare filter should return to disabled state');
+
+  await page.getByPlaceholder('输入中文词句').fill('民');
+  await page.waitForTimeout(200);
+  const wideRowHead = await page.locator('.row-head span').first().textContent();
+  assert(wideRowHead === '+ in≈en', `wide rhyme mode should show exact and rhyme finals, got ${wideRowHead}`);
+  await exactToggle.click();
+  assert((await exactToggle.textContent())?.includes('精确匹配韵母'), 'exact filter should keep fixed label when enabled');
+  assert((await exactToggle.getAttribute('class'))?.includes('active'), 'exact filter should have enabled styling');
+  const exactFinals = await page.locator('.char-chip').evaluateAll((nodes) =>
+    [...new Set(nodes.map((node) => node.getAttribute('data-final')).filter(Boolean))],
+  );
+  assert(exactFinals.length === 1 && exactFinals[0] === 'in', `exact mode should only show in finals, got ${exactFinals.join(',')}`);
+  await exactToggle.click();
+  assert((await exactToggle.textContent())?.includes('精确匹配韵母'), 'exact filter should keep fixed label when disabled');
 
   await page.getByPlaceholder('输入中文词句').fill('银行');
   await page.waitForTimeout(200);

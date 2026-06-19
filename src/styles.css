@@ -47,10 +47,14 @@ button {
 
 .app-shell {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: min(100%, 430px);
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 0;
   margin: 0 auto;
   padding: 18px 20px 34px;
+  overflow: hidden;
 }
 
 .topbar {
@@ -214,6 +218,7 @@ h2 {
 }
 
 .section-line {
+  flex: 0 0 auto;
   padding: 14px 0;
   border-bottom: 1.5px solid var(--g200);
 }
@@ -297,14 +302,21 @@ h2 {
   font-size: 14px;
 }
 
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
 .common-toggle {
   display: inline-flex;
   align-items: center;
   min-height: 32px;
-  gap: 6px;
+  gap: 7px;
   border: 1.5px solid var(--g200);
   border-radius: 8px;
-  padding: 4px 8px 4px 5px;
+  padding: 5px 9px;
   color: var(--g500);
   background: var(--paper);
   font-size: 13px;
@@ -318,53 +330,17 @@ h2 {
 }
 
 .common-toggle input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.common-toggle svg {
-  color: var(--g300);
-  transition: color 120ms;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--olive);
+  cursor: pointer;
 }
 
 .common-toggle.active {
   border-color: color-mix(in srgb, var(--olive) 55%, var(--g200));
   color: var(--olive);
   background: color-mix(in srgb, var(--olive) 9%, var(--paper));
-}
-
-.common-toggle.active svg {
-  color: var(--olive);
-}
-
-.toggle-track {
-  position: relative;
-  display: inline-flex;
-  width: 28px;
-  height: 16px;
-  border-radius: 999px;
-  background: var(--g300);
-  transition: background 120ms;
-}
-
-.toggle-thumb {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: var(--paper);
-  transition: transform 120ms;
-}
-
-.common-toggle.active .toggle-track {
-  background: var(--olive);
-}
-
-.common-toggle.active .toggle-thumb {
-  transform: translateX(12px);
 }
 
 .initial-grid {
@@ -403,14 +379,22 @@ h2 {
 }
 
 .results {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
   border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .result-list {
   position: relative;
   display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
   flex-direction: column;
-  max-height: calc(100vh - 316px);
+  max-height: none;
+  padding-bottom: 22px;
   overflow-y: auto;
   overscroll-behavior: contain;
   scroll-behavior: smooth;
@@ -439,17 +423,19 @@ h2 {
 .row-head {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
   border: 0;
   padding: 0;
   background: transparent;
   color: var(--slate);
+  text-align: center;
   cursor: pointer;
 }
 
 .row-head strong {
+  width: 100%;
   font-family: var(--serif);
   font-size: 32px;
   font-weight: 500;
@@ -459,6 +445,8 @@ h2 {
 .row-head span {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
   min-height: 20px;
   border: 0;
   border-radius: 0;
@@ -468,6 +456,9 @@ h2 {
   font-family: var(--mono);
   font-size: 11px;
   font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  white-space: normal;
 }
 
 .card-tones {

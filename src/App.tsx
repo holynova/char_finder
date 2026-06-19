@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  CheckCircle2,
   Code2,
   Search,
   Shuffle,
@@ -22,6 +21,7 @@ const TONE_LABELS: Record<Tone, string> = {
 type RhymeItem = {
   char: string;
   pinyin: string;
+  final?: string;
   rank: number;
   commonTier: 1 | 2;
   frequency: number;
@@ -58,8 +58,35 @@ function toneItems(group: RhymeGroup | undefined, tone: Tone, commonOnly: boolea
   return (group?.tones[String(tone)] ?? []).filter((item) => !commonOnly || item.commonTier === 1);
 }
 
-function hasItems(group: RhymeGroup | undefined, commonOnly: boolean) {
-  return TONES.some((tone) => toneItems(group, tone, commonOnly).length > 0);
+function itemFinal(item: RhymeItem) {
+  return item.final ?? readingsForChar(item.char).find((reading) => reading.pinyin === item.pinyin)?.final ?? '';
+}
+
+function finalMatches(item: RhymeItem, final: string | undefined) {
+  return !final || itemFinal(item) === final;
+}
+
+function sortByRhymePrecision(items: RhymeItem[], final: string | undefined) {
+  return [...items].sort((a, b) => {
+    const exactDelta = Number(finalMatches(b, final)) - Number(finalMatches(a, final));
+    return exactDelta || a.rank - b.rank || a.char.localeCompare(b.char, 'zh-Hans-CN');
+  });
+}
+
+function displayToneItems(
+  group: RhymeGroup | undefined,
+  tone: Tone,
+  commonOnly: boolean,
+  final: string | undefined,
+  exactOnly: boolean,
+) {
+  const items = toneItems(group, tone, commonOnly);
+  const filtered = exactOnly ? items.filter((item) => finalMatches(item, final)) : items;
+  return sortByRhymePrecision(filtered, final);
+}
+
+function hasItems(group: RhymeGroup | undefined, commonOnly: boolean, final: string | undefined, exactOnly: boolean) {
+  return TONES.some((tone) => displayToneItems(group, tone, commonOnly, final, exactOnly).length > 0);
 }
 
 function uniqueByChar(items: RhymeItem[]) {
@@ -96,6 +123,8 @@ function App() {
   const [readingIndex, setReadingIndex] = useState(0);
   const [selectedInitial, setSelectedInitial] = useState('b');
   const [commonOnly, setCommonOnly] = useState(true);
+  const [exactOnly, setExactOnly] = useState(false);
+  const showRare = !commonOnly;
   const [randomSeed, setRandomSeed] = useState(7);
   const [selectedChar, setSelectedChar] = useState('望');
   const resultListRef = useRef<HTMLDivElement | null>(null);
@@ -107,8 +136,8 @@ function App() {
   const rhymeGroups = activeReading ? index.groups[activeReading.rhyme] ?? {} : {};
 
   const availableInitials = useMemo(
-    () => index.initials.filter((initial) => hasItems(rhymeGroups[initial], commonOnly)),
-    [commonOnly, rhymeGroups],
+    () => index.initials.filter((initial) => hasItems(rhymeGroups[initial], commonOnly, activeReading?.final, exactOnly)),
+    [activeReading?.final, commonOnly, exactOnly, rhymeGroups],
   );
 
   useEffect(() => {
@@ -128,10 +157,10 @@ function App() {
   const allCurrentItems = useMemo(() => {
     return uniqueByChar(
       Object.values(rhymeGroups).flatMap((group) =>
-        TONES.flatMap((tone) => toneItems(group, tone, commonOnly)),
+        TONES.flatMap((tone) => displayToneItems(group, tone, commonOnly, activeReading?.final, exactOnly)),
       ),
     ).filter((item) => item.char !== targetChar);
-  }, [commonOnly, rhymeGroups, targetChar]);
+  }, [activeReading?.final, commonOnly, exactOnly, rhymeGroups, targetChar]);
 
   const inspiration = useMemo(
     () => pickToneFirstRandom(allCurrentItems.slice(0, 80), activeReading?.tone, randomSeed),
@@ -215,6 +244,7 @@ function App() {
             <button
               type="button"
               key={`${item.char}-${item.pinyin}`}
+              data-final={itemFinal(item)}
               className={item.char === selectedChar ? 'idea-chip selected' : 'idea-chip'}
               onClick={() => setSelectedChar(item.char)}
               onDoubleClick={() => continueWith(item.char)}
@@ -232,18 +262,24 @@ function App() {
       <section className="initials section-line" aria-label="选择声母">
         <div className="section-title">
           <h2>选择声母</h2>
-          <label className={commonOnly ? 'common-toggle active' : 'common-toggle'}>
-            <input
-              type="checkbox"
-              checked={commonOnly}
-              onChange={(event) => setCommonOnly(event.target.checked)}
-            />
-            <span className="toggle-track" aria-hidden="true">
-              <span className="toggle-thumb" />
-            </span>
-            <CheckCircle2 size={15} />
-            <span>{commonOnly ? '常用字过滤' : '显示全部字'}</span>
-          </label>
+          <div className="filter-controls">
+            <label className={exactOnly ? 'common-toggle active' : 'common-toggle'}>
+              <input
+                type="checkbox"
+                checked={exactOnly}
+                onChange={(event) => setExactOnly(event.target.checked)}
+              />
+              <span>精确匹配韵母</span>
+            </label>
+            <label className={showRare ? 'common-toggle active' : 'common-toggle'}>
+              <input
+                type="checkbox"
+                checked={showRare}
+                onChange={(event) => setCommonOnly(!event.target.checked)}
+              />
+              <span>生僻字</span>
+            </label>
+          </div>
         </div>
         <div className="initial-grid">
           {displayInitials.map((initial) => {
@@ -269,7 +305,7 @@ function App() {
             const group = rhymeGroups[initial];
             const toneRows = TONES.map((tone) => ({
               tone,
-              items: toneItems(group, tone, commonOnly)
+              items: displayToneItems(group, tone, commonOnly, activeReading?.final, exactOnly)
                 .filter((item) => item.char !== targetChar)
                 .slice(0, 15),
             })).filter(({ items }) => items.length > 0);
@@ -286,7 +322,7 @@ function App() {
               >
                 <button className="row-head" type="button" onClick={() => chooseInitial(initial)}>
                   <strong>{initial}</strong>
-                  <span>+ {activeReading?.rhyme}</span>
+                  <span>+ {exactOnly ? activeReading?.final : `${activeReading?.final}≈${activeReading?.rhyme}`}</span>
                 </button>
                 <div className="card-tones">
                   {toneRows.length ? (
@@ -302,6 +338,7 @@ function App() {
                           <div className="card-chars">
                             <button
                               type="button"
+                              data-final={itemFinal(primary)}
                               className={primary.char === selectedChar ? 'char-chip main selected' : 'char-chip main'}
                               onClick={() => setSelectedChar(primary.char)}
                               onDoubleClick={() => continueWith(primary.char)}
@@ -311,6 +348,7 @@ function App() {
                             {rest.map((item) => (
                               <button
                                 type="button"
+                                data-final={itemFinal(item)}
                                 className={item.char === selectedChar ? 'char-chip selected' : 'char-chip'}
                                 key={`${item.char}-${item.pinyin}`}
                                 onClick={() => setSelectedChar(item.char)}
