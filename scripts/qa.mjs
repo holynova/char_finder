@@ -101,13 +101,22 @@ try {
   assert(title === '韵脚画布', 'page title should render');
   assert(searchButtons === 0, 'search button should be removed because input searches live');
   assert(initials >= 20, 'initial selector should show many initials');
+  const initialLayout = await page.locator('.initial-grid').evaluate((node) => {
+    const styles = getComputedStyle(node);
+    return {
+      display: styles.display,
+      overflowX: styles.overflowX,
+    };
+  });
+  assert(initialLayout.display === 'grid', 'initial selector should fully expand in a wrapping grid');
+  assert(initialLayout.overflowX === 'visible', 'initial selector should not use horizontal scrolling');
   assert(rows >= 20, 'result area should render all available initial combinations');
   assert(toneLegendCount === 0, 'tone legend header should be removed from results');
   assert(fontDebugCount === 0, 'font debug picker should not ship');
   assert(historyButtons === 0, 'unused history icon should not ship');
   assert(githubLinks >= 2, 'header and footer should link to the GitHub repository');
   assert(authorLinks >= 1, 'footer should link to the author profile');
-  assert(await page.getByText('v1.0.0').count() >= 1, 'footer should show the app version');
+  assert(await page.getByText('v1.0.1').count() >= 1, 'footer should show the app version');
   assert(readingRows === 0, 'top pinyin metadata row should be removed');
   assert(cardToneLabels > rows, 'result cards should group characters under tone labels');
   assert(ideaCount === 8, 'random inspiration should show eight options');
@@ -122,7 +131,23 @@ try {
   assert(longestToneRow.flexWrap === 'nowrap', 'same-tone result rows should not wrap');
   assert(longestToneRow.clientHeight <= 36, 'same-tone result rows should stay one line tall on mobile');
   assert(longestToneRow.chipCount <= 6, 'same-tone result rows should preview at most six characters');
+  const maxMoreRowChars = await page.locator('.card-chars.has-more').evaluateAll((nodes) =>
+    Math.max(...nodes.map((node) => node.querySelectorAll('.char-chip').length)),
+  );
+  assert(maxMoreRowChars <= 5, 'rows with more results should show five characters plus the more icon');
+  const moreRowFontSizes = await page.locator('.card-chars.has-more').first().locator('.char-chip').evaluateAll((nodes) =>
+    [...new Set(nodes.map((node) => getComputedStyle(node).fontSize))],
+  );
+  assert(moreRowFontSizes.length === 1 && moreRowFontSizes[0] === '22px', 'more rows should keep the normal character font size');
   assert(await page.locator('.char-more').count() > 0, 'long result rows should expose a more button');
+  const hiddenMoreButtons = await page.locator('.card-chars.has-more').evaluateAll((nodes) =>
+    nodes.filter((node) => {
+      const rowRect = node.getBoundingClientRect();
+      const moreRect = node.querySelector('.char-more')?.getBoundingClientRect();
+      return !moreRect || moreRect.right > rowRect.right + 1 || moreRect.left < rowRect.left - 1;
+    }).length,
+  );
+  assert(hiddenMoreButtons === 0, 'more button should be visible without horizontal scrolling');
 
   await page.locator('.char-more').first().click();
   const moreDialog = page.getByRole('dialog', { name: '更多答案' });
@@ -166,7 +191,13 @@ try {
   assert(rowHeadAlignment.textAlign === 'center', 'result left rail text should be centered');
 
   const exactToggle = page.locator('.common-toggle').nth(0);
-  assert((await exactToggle.textContent())?.includes('精确匹配韵母'), 'exact filter should show fixed label');
+  assert((await exactToggle.textContent())?.includes('精确'), 'exact filter should show compact label');
+  const exactToggleBox = await exactToggle.boundingBox();
+  const queryBox = await page.locator('.query-box').boundingBox();
+  assert(
+    exactToggleBox && queryBox && Math.abs(exactToggleBox.height - queryBox.height) <= 1,
+    'exact filter should match the input height',
+  );
   assert(!(await exactToggle.getAttribute('class'))?.includes('active'), 'exact filter should start disabled');
   assert(await page.getByText('生僻字').count() === 0, 'rare character checkbox should be removed');
 
@@ -195,14 +226,14 @@ try {
   await page.getByPlaceholder('输入中文词句').fill('民');
   await page.waitForTimeout(200);
   await exactToggle.click();
-  assert((await exactToggle.textContent())?.includes('精确匹配韵母'), 'exact filter should keep fixed label when enabled');
+  assert((await exactToggle.textContent())?.includes('精确'), 'exact filter should keep compact label when enabled');
   assert((await exactToggle.getAttribute('class'))?.includes('active'), 'exact filter should have enabled styling');
   const exactFinals = await page.locator('.char-chip').evaluateAll((nodes) =>
     [...new Set(nodes.map((node) => node.getAttribute('data-final')).filter(Boolean))],
   );
   assert(exactFinals.length === 1 && exactFinals[0] === 'in', `exact mode should only show in finals, got ${exactFinals.join(',')}`);
   await exactToggle.click();
-  assert((await exactToggle.textContent())?.includes('精确匹配韵母'), 'exact filter should keep fixed label when disabled');
+  assert((await exactToggle.textContent())?.includes('精确'), 'exact filter should keep compact label when disabled');
 
   await page.getByPlaceholder('输入中文词句').fill('银行');
   await page.waitForTimeout(200);

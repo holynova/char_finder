@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  MoreHorizontal,
+  ChevronRight,
   Shuffle,
   X,
 } from 'lucide-react';
@@ -10,9 +10,10 @@ import './styles.css';
 
 const REPO_URL = 'https://github.com/holynova/char_finder';
 const AUTHOR_NAME = 'holynova';
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 const TONES: Tone[] = [1, 2, 3, 4];
 const INLINE_RESULT_LIMIT = 6;
+const INLINE_RESULT_LIMIT_WITH_MORE = 5;
 const TONE_LABELS: Record<Tone, string> = {
   1: '1声',
   2: '2声',
@@ -265,6 +266,14 @@ function App() {
           )}
           {targetChar && <span className="target-chip">{targetChar}</span>}
         </label>
+        <label className={exactOnly ? 'common-toggle exact-toggle active' : 'common-toggle exact-toggle'}>
+          <input
+            type="checkbox"
+            checked={exactOnly}
+            onChange={(event) => setExactOnly(event.target.checked)}
+          />
+          <span>精确</span>
+        </label>
       </section>
 
       {targetChar && (
@@ -281,16 +290,6 @@ function App() {
                   {initial}
                 </button>
               ))}
-            </div>
-            <div className="filter-controls">
-              <label className={exactOnly ? 'common-toggle active' : 'common-toggle'}>
-                <input
-                  type="checkbox"
-                  checked={exactOnly}
-                  onChange={(event) => setExactOnly(event.target.checked)}
-                />
-                <span>精确匹配韵母</span>
-              </label>
             </div>
           </div>
           {rhymeReadings.length > 1 && (
@@ -375,9 +374,10 @@ function App() {
                 <div className="card-tones">
                   {toneRows.length ? (
                     toneRows.map(({ tone, items }) => {
-                      const previewItems = items.slice(0, INLINE_RESULT_LIMIT);
+                      const hasMore = items.length > INLINE_RESULT_LIMIT;
+                      const previewLimit = hasMore ? INLINE_RESULT_LIMIT_WITH_MORE : INLINE_RESULT_LIMIT;
+                      const previewItems = items.slice(0, previewLimit);
                       const [primary, ...rest] = previewItems;
-                      const hasMore = items.length > previewItems.length;
 
                       return (
                         <div
@@ -385,7 +385,7 @@ function App() {
                           key={`${initial}-${tone}`}
                         >
                           <b>{TONE_LABELS[tone]}</b>
-                          <div className="card-chars">
+                          <div className={hasMore ? 'card-chars has-more' : 'card-chars'}>
                             <button
                               type="button"
                               data-final={itemFinal(primary)}
@@ -414,7 +414,7 @@ function App() {
                                 aria-label={`查看更多${initial}${TONE_LABELS[tone]}`}
                                 onClick={() => setMorePanel({ initial, tone, items })}
                               >
-                                <MoreHorizontal size={18} />
+                                <ChevronRight size={18} />
                               </button>
                             )}
                           </div>
