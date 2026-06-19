@@ -51,9 +51,12 @@ try {
   const title = await page.locator('h1').textContent();
   const initials = await page.locator('.initial-grid button').count();
   const rows = await page.locator('.result-card').count();
+  const searchButtons = await page.locator('.search-btn').count();
   const toneLegendCount = await page.locator('.tone-legend').count();
   const fontDebugCount = await page.locator('.font-debug').count();
   const historyButtons = await page.getByRole('button', { name: '查看历史' }).count();
+  const githubLinks = await page.locator('a[href="https://github.com/holynova/char_finder"]').count();
+  const authorLinks = await page.locator('a[href="https://github.com/holynova"]').count();
   const readingRows = await page.locator('.reading-row').count();
   const cardToneLabels = await page.locator('.card-tone b').count();
   const ideaCount = await page.locator('.idea-chip').count();
@@ -75,6 +78,7 @@ try {
     nodes
       .map((node) => ({
         chipCount: node.querySelectorAll('.char-chip').length,
+        moreCount: node.querySelectorAll('.char-more').length,
         clientHeight: node.clientHeight,
         clientWidth: node.clientWidth,
         flexWrap: getComputedStyle(node).flexWrap,
@@ -87,7 +91,7 @@ try {
     Object.values(data.groups[defaultReading.rhyme]).flatMap((group) =>
       TONES.flatMap((tone) => group.tones[String(tone)] ?? []),
     ),
-  ).filter((item) => item.commonTier === 1 && item.char !== '光');
+  ).filter((item) => item.char !== '光');
   const sameTonePool = defaultItems.filter((item) => pinyinTone(item) === defaultReading.tone);
   const defaultIdeas = await page.locator('.idea-chip').allTextContents();
   const defaultIdeasPreferActiveTone =
@@ -95,11 +99,15 @@ try {
     defaultIdeas.every((char) => sameTonePool.some((item) => item.char === char));
 
   assert(title === '韵脚画布', 'page title should render');
+  assert(searchButtons === 0, 'search button should be removed because input searches live');
   assert(initials >= 20, 'initial selector should show many initials');
   assert(rows >= 20, 'result area should render all available initial combinations');
   assert(toneLegendCount === 0, 'tone legend header should be removed from results');
   assert(fontDebugCount === 0, 'font debug picker should not ship');
   assert(historyButtons === 0, 'unused history icon should not ship');
+  assert(githubLinks >= 2, 'header and footer should link to the GitHub repository');
+  assert(authorLinks >= 1, 'footer should link to the author profile');
+  assert(await page.getByText('v1.0.0').count() >= 1, 'footer should show the app version');
   assert(readingRows === 0, 'top pinyin metadata row should be removed');
   assert(cardToneLabels > rows, 'result cards should group characters under tone labels');
   assert(ideaCount === 8, 'random inspiration should show eight options');
@@ -113,7 +121,16 @@ try {
   assert(resultScroll.scrollHeight > resultScroll.clientHeight, 'result list should scroll internally');
   assert(longestToneRow.flexWrap === 'nowrap', 'same-tone result rows should not wrap');
   assert(longestToneRow.clientHeight <= 36, 'same-tone result rows should stay one line tall on mobile');
-  assert(longestToneRow.scrollWidth > longestToneRow.clientWidth, 'long same-tone result rows should scroll horizontally');
+  assert(longestToneRow.chipCount <= 6, 'same-tone result rows should preview at most six characters');
+  assert(await page.locator('.char-more').count() > 0, 'long result rows should expose a more button');
+
+  await page.locator('.char-more').first().click();
+  const moreDialog = page.getByRole('dialog', { name: '更多答案' });
+  await moreDialog.waitFor();
+  const modalCharCount = await moreDialog.locator('.more-char').count();
+  assert(modalCharCount > 5, 'more dialog should show additional answers');
+  await moreDialog.getByRole('button', { name: '关闭' }).click();
+  await moreDialog.waitFor({ state: 'detached' });
 
   await page.locator('.result-list').evaluate((node) => {
     node.scrollTop = node.scrollHeight;
@@ -149,22 +166,34 @@ try {
   assert(rowHeadAlignment.textAlign === 'center', 'result left rail text should be centered');
 
   const exactToggle = page.locator('.common-toggle').nth(0);
-  const commonToggle = page.locator('.common-toggle').nth(1);
   assert((await exactToggle.textContent())?.includes('精确匹配韵母'), 'exact filter should show fixed label');
   assert(!(await exactToggle.getAttribute('class'))?.includes('active'), 'exact filter should start disabled');
-  assert((await commonToggle.textContent())?.includes('生僻字'), 'rare filter should show fixed label');
-  assert(!(await commonToggle.getAttribute('class'))?.includes('active'), 'rare filter should start disabled');
-  await commonToggle.click();
-  assert((await commonToggle.textContent())?.includes('生僻字'), 'rare filter should keep fixed label when enabled');
-  assert((await commonToggle.getAttribute('class'))?.includes('active'), 'rare filter should have enabled styling');
-  await commonToggle.click();
-  assert((await commonToggle.textContent())?.includes('生僻字'), 'rare filter should keep fixed label when disabled');
-  assert(!(await commonToggle.getAttribute('class'))?.includes('active'), 'rare filter should return to disabled state');
+  assert(await page.getByText('生僻字').count() === 0, 'rare character checkbox should be removed');
 
   await page.getByPlaceholder('输入中文词句').fill('民');
   await page.waitForTimeout(200);
-  const wideRowHead = await page.locator('.row-head span').first().textContent();
-  assert(wideRowHead === '+ in≈en', `wide rhyme mode should show exact and rhyme finals, got ${wideRowHead}`);
+  const wideRowHead = await page.locator('.row-head .rhyme-stack').first().evaluate((node) =>
+    [...node.querySelectorAll('i')].map((item) => item.textContent),
+  );
+  assert(wideRowHead.join('') === '+in≈en', `wide rhyme mode should show exact and rhyme finals, got ${wideRowHead.join('')}`);
+  assert(wideRowHead.length === 4, 'wide rhyme mode should stack each rhyme part on its own line');
+  await page.getByPlaceholder('输入中文词句').fill('男');
+  await page.waitForTimeout(200);
+  const singleRhymeLabel = await page.locator('.row-head .rhyme-stack').first().evaluate((node) =>
+    [...node.querySelectorAll('i')].map((item) => item.textContent).join(''),
+  );
+  const rhymeOptionCount = await page.locator('.rhyme-options button').count();
+  assert(singleRhymeLabel === '+an', `same final/rhyme should only show one label, got ${singleRhymeLabel}`);
+  assert(rhymeOptionCount === 0, 'single-rhyme characters should not show a rhyme option list');
+  await page.getByPlaceholder('输入中文词句').fill('哪');
+  await page.waitForTimeout(200);
+  const multiRhymeOptions = await page.locator('.rhyme-options button').allTextContents();
+  assert(multiRhymeOptions.length === 4, `multi-rhyme characters should show all rhyme options, got ${multiRhymeOptions.length}`);
+  assert(multiRhymeOptions.every((text) => /[a-züv]+[1-5]/u.test(text)), 'rhyme options should show full pinyin labels');
+  const rhymeOptionsLayout = await page.locator('.rhyme-options').evaluate((node) => getComputedStyle(node).display);
+  assert(rhymeOptionsLayout === 'flex', 'rhyme options should be displayed in one horizontal row');
+  await page.getByPlaceholder('输入中文词句').fill('民');
+  await page.waitForTimeout(200);
   await exactToggle.click();
   assert((await exactToggle.textContent())?.includes('精确匹配韵母'), 'exact filter should keep fixed label when enabled');
   assert((await exactToggle.getAttribute('class'))?.includes('active'), 'exact filter should have enabled styling');
@@ -206,8 +235,10 @@ try {
   assert(selectedRowTop >= -2 && selectedRowTop < 40, 'selected initial should scroll near the top of the result list');
   const resultCardsAfterScroll = await page.locator('.result-card.selected').count();
   assert(resultCardsAfterScroll === 0, 'clicking an initial should not mark result cards selected');
-  const firstRowChars = await page.locator('.result-card[data-initial="ch"]').locator('.char-chip').count();
-  assert(firstRowChars >= 10, 'result groups should expose more character options');
+  const maxInlineChars = await page.locator('.result-card[data-initial="ch"] .card-chars').evaluateAll((nodes) =>
+    Math.max(...nodes.map((node) => node.querySelectorAll('.char-chip').length)),
+  );
+  assert(maxInlineChars <= 6, 'each tone row should keep inline character options concise');
 
   await page.locator('.result-list').evaluate((node) => {
     node.scrollTop = 0;
@@ -220,6 +251,15 @@ try {
   await page.locator('.idea-chip').first().click();
   const selectedIdeas = await page.locator('.idea-chip.selected').count();
   assert(selectedIdeas === 1, 'clicking an inspiration option should select it');
+
+  await page.getByPlaceholder('输入中文词句').fill('');
+  await page.waitForTimeout(200);
+  assert(await page.locator('.empty-state').count() === 1, 'empty input should show an intentional empty state');
+  assert(await page.locator('.result-card').count() === 0, 'empty input should hide result cards');
+  assert(await page.locator('.initial-grid button').count() === 0, 'empty input should hide initial settings');
+  await page.locator('.empty-examples button').first().click();
+  await page.waitForTimeout(200);
+  assert((await page.getByPlaceholder('输入中文词句').inputValue()).length > 0, 'empty examples should populate the query');
 
   console.log(
     JSON.stringify(

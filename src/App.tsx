@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Code2,
-  Search,
+  MoreHorizontal,
   Shuffle,
   X,
 } from 'lucide-react';
@@ -10,7 +9,10 @@ import { lastHanChar, readingsForChar, type Reading, type Tone } from './rhyme';
 import './styles.css';
 
 const REPO_URL = 'https://github.com/holynova/char_finder';
+const AUTHOR_NAME = 'holynova';
+const APP_VERSION = '1.0.0';
 const TONES: Tone[] = [1, 2, 3, 4];
+const INLINE_RESULT_LIMIT = 6;
 const TONE_LABELS: Record<Tone, string> = {
   1: '1声',
   2: '2声',
@@ -40,6 +42,30 @@ type IndexData = {
 
 const index = data as IndexData;
 
+function GitHubMark() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 16 16" width="18" height="18" fill="currentColor">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.65 7.65 0 0 1 8 4.38c.68 0 1.36.09 2 .26 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+      />
+    </svg>
+  );
+}
+
+function rhymeLabel(reading: Reading | undefined, exactOnly: boolean) {
+  if (!reading) return '';
+  if (exactOnly || reading.final === reading.rhyme) return reading.final;
+  return `${reading.final}≈${reading.rhyme}`;
+}
+
+function rhymeLabelParts(reading: Reading | undefined, exactOnly: boolean) {
+  if (!reading) return [];
+  if (exactOnly || reading.final === reading.rhyme) return ['+', reading.final];
+  return ['+', reading.final, '≈', reading.rhyme];
+}
+
 function mergeReadings(char: string) {
   const fromIndex = index.characters[char] ?? [];
   const fromRuntime = readingsForChar(char);
@@ -66,10 +92,16 @@ function finalMatches(item: RhymeItem, final: string | undefined) {
   return !final || itemFinal(item) === final;
 }
 
-function sortByRhymePrecision(items: RhymeItem[], final: string | undefined) {
+function sortByResultPriority(items: RhymeItem[], final: string | undefined) {
   return [...items].sort((a, b) => {
     const exactDelta = Number(finalMatches(b, final)) - Number(finalMatches(a, final));
-    return exactDelta || a.rank - b.rank || a.char.localeCompare(b.char, 'zh-Hans-CN');
+    return (
+      exactDelta ||
+      b.frequency - a.frequency ||
+      a.commonTier - b.commonTier ||
+      a.rank - b.rank ||
+      a.char.localeCompare(b.char, 'zh-Hans-CN')
+    );
   });
 }
 
@@ -82,7 +114,7 @@ function displayToneItems(
 ) {
   const items = toneItems(group, tone, commonOnly);
   const filtered = exactOnly ? items.filter((item) => finalMatches(item, final)) : items;
-  return sortByRhymePrecision(filtered, final);
+  return sortByResultPriority(filtered, final);
 }
 
 function hasItems(group: RhymeGroup | undefined, commonOnly: boolean, final: string | undefined, exactOnly: boolean) {
@@ -91,6 +123,10 @@ function hasItems(group: RhymeGroup | undefined, commonOnly: boolean, final: str
 
 function uniqueByChar(items: RhymeItem[]) {
   return [...new Map(items.map((item) => [item.char, item])).values()];
+}
+
+function uniqueRhymeReadings(readings: Reading[]) {
+  return [...new Map(readings.map((reading) => [`${reading.final}-${reading.rhyme}`, reading])).values()];
 }
 
 function pickRandom(items: RhymeItem[], seed: number) {
@@ -122,17 +158,18 @@ function App() {
   const [query, setQuery] = useState('月光');
   const [readingIndex, setReadingIndex] = useState(0);
   const [selectedInitial, setSelectedInitial] = useState('b');
-  const [commonOnly, setCommonOnly] = useState(true);
   const [exactOnly, setExactOnly] = useState(false);
-  const showRare = !commonOnly;
   const [randomSeed, setRandomSeed] = useState(7);
   const [selectedChar, setSelectedChar] = useState('望');
+  const [morePanel, setMorePanel] = useState<{ initial: string; tone: Tone; items: RhymeItem[] } | null>(null);
   const resultListRef = useRef<HTMLDivElement | null>(null);
   const resultRefs = useRef(new Map<string, HTMLElement>());
+  const commonOnly = false;
 
   const targetChar = lastHanChar(query);
   const readings = useMemo(() => mergeReadings(targetChar), [targetChar]);
-  const activeReading = readings[Math.min(readingIndex, Math.max(readings.length - 1, 0))];
+  const rhymeReadings = useMemo(() => uniqueRhymeReadings(readings), [readings]);
+  const activeReading = rhymeReadings[Math.min(readingIndex, Math.max(rhymeReadings.length - 1, 0))];
   const rhymeGroups = activeReading ? index.groups[activeReading.rhyme] ?? {} : {};
 
   const availableInitials = useMemo(
@@ -151,7 +188,6 @@ function App() {
     }
   }, [availableInitials, selectedInitial]);
 
-  const displayInitials = index.initials;
   const visibleInitials = availableInitials;
 
   const allCurrentItems = useMemo(() => {
@@ -206,13 +242,10 @@ function App() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <div>
-          <p className="eyebrow">SAME RIME</p>
-          <h1>韵脚画布</h1>
-        </div>
+        <h1>韵脚画布</h1>
         <div className="header-actions">
           <a className="icon-link" href={REPO_URL} aria-label="GitHub repository">
-            <Code2 size={20} />
+            <GitHubMark />
           </a>
         </div>
       </header>
@@ -232,76 +265,87 @@ function App() {
           )}
           {targetChar && <span className="target-chip">{targetChar}</span>}
         </label>
-        <button className="search-btn" type="button" onClick={() => setRandomSeed(Date.now())}>
-          <Search size={24} />
-          <span>查韵</span>
-        </button>
       </section>
 
-      <section className="inspiration section-line" aria-label="随机灵感">
-        <div className="inspiration-row">
-          {inspiration.map((item) => (
-            <button
-              type="button"
-              key={`${item.char}-${item.pinyin}`}
-              data-final={itemFinal(item)}
-              className={item.char === selectedChar ? 'idea-chip selected' : 'idea-chip'}
-              onClick={() => setSelectedChar(item.char)}
-              onDoubleClick={() => continueWith(item.char)}
-            >
-              {item.char}
-            </button>
-          ))}
-          <button className="shuffle-btn" type="button" onClick={() => setRandomSeed(Date.now())} aria-label="换一批">
-            <Shuffle size={16} />
-          </button>
-          {!inspiration.length && <p className="muted">没有找到可用的常用押韵字。</p>}
-        </div>
-      </section>
-
-      <section className="initials section-line" aria-label="选择声母">
-        <div className="section-title">
-          <h2>选择声母</h2>
-          <div className="filter-controls">
-            <label className={exactOnly ? 'common-toggle active' : 'common-toggle'}>
-              <input
-                type="checkbox"
-                checked={exactOnly}
-                onChange={(event) => setExactOnly(event.target.checked)}
-              />
-              <span>精确匹配韵母</span>
-            </label>
-            <label className={showRare ? 'common-toggle active' : 'common-toggle'}>
-              <input
-                type="checkbox"
-                checked={showRare}
-                onChange={(event) => setCommonOnly(!event.target.checked)}
-              />
-              <span>生僻字</span>
-            </label>
+      {targetChar && (
+        <section className="initials section-line" aria-label="选择声母">
+          <div className="settings-row">
+            <div className="initial-grid" aria-label="声母">
+              {visibleInitials.map((initial) => (
+                <button
+                  type="button"
+                  key={initial}
+                  className={initial === selectedInitial ? 'active' : ''}
+                  onClick={() => chooseInitial(initial)}
+                >
+                  {initial}
+                </button>
+              ))}
+            </div>
+            <div className="filter-controls">
+              <label className={exactOnly ? 'common-toggle active' : 'common-toggle'}>
+                <input
+                  type="checkbox"
+                  checked={exactOnly}
+                  onChange={(event) => setExactOnly(event.target.checked)}
+                />
+                <span>精确匹配韵母</span>
+              </label>
+            </div>
           </div>
-        </div>
-        <div className="initial-grid">
-          {displayInitials.map((initial) => {
-            const disabled = !availableInitials.includes(initial);
-            return (
-              <button
-                type="button"
-                key={initial}
-                disabled={disabled}
-                className={initial === selectedInitial ? 'active' : ''}
-                onClick={() => chooseInitial(initial)}
+          {rhymeReadings.length > 1 && (
+            <div className="rhyme-options" aria-label="押韵韵母">
+              {rhymeReadings.map((reading, index) => (
+                <button
+                  type="button"
+                key={`${reading.pinyin}-${reading.final}-${reading.rhyme}`}
+                className={reading === activeReading ? 'active' : ''}
+                onClick={() => setReadingIndex(index)}
               >
-                {initial}
+                {reading.pinyin}
               </button>
-            );
-          })}
-        </div>
-      </section>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       <section className="results section-line" aria-label="押韵结果">
+        {targetChar && (
+          <div className="inspiration-strip" aria-label="随机灵感">
+            {inspiration.map((item) => (
+              <button
+                type="button"
+                key={`${item.char}-${item.pinyin}`}
+                data-final={itemFinal(item)}
+                className={item.char === selectedChar ? 'idea-chip selected' : 'idea-chip'}
+                onClick={() => setSelectedChar(item.char)}
+                onDoubleClick={() => continueWith(item.char)}
+              >
+                {item.char}
+              </button>
+            ))}
+            <button className="shuffle-btn" type="button" onClick={() => setRandomSeed(Date.now())} aria-label="换一批">
+              <Shuffle size={15} />
+            </button>
+            {!inspiration.length && <p className="muted">没有找到可用的常用押韵字。</p>}
+          </div>
+        )}
         <div className="result-list" ref={resultListRef} onScroll={syncInitialFromScroll}>
-          {visibleInitials.map((initial) => {
+          {!targetChar && (
+            <div className="empty-state">
+              <strong>输入一个汉字或词句</strong>
+              <p>会自动取最后一个汉字查找同韵脚结果。</p>
+              <div className="empty-examples" aria-label="示例">
+                {['月光', '山川', '民', '男'].map((example) => (
+                  <button type="button" key={example} onClick={() => setQuery(example)}>
+                    {example}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          {targetChar && visibleInitials.map((initial) => {
             const group = rhymeGroups[initial];
             const toneRows = TONES.map((tone) => ({
               tone,
@@ -322,12 +366,18 @@ function App() {
               >
                 <button className="row-head" type="button" onClick={() => chooseInitial(initial)}>
                   <strong>{initial}</strong>
-                  <span>+ {exactOnly ? activeReading?.final : `${activeReading?.final}≈${activeReading?.rhyme}`}</span>
+                  <span className="rhyme-stack" aria-label={`+ ${rhymeLabel(activeReading, exactOnly)}`}>
+                    {rhymeLabelParts(activeReading, exactOnly).map((part, index) => (
+                      <i key={`${part}-${index}`}>{part}</i>
+                    ))}
+                  </span>
                 </button>
                 <div className="card-tones">
                   {toneRows.length ? (
                     toneRows.map(({ tone, items }) => {
-                      const [primary, ...rest] = items;
+                      const previewItems = items.slice(0, INLINE_RESULT_LIMIT);
+                      const [primary, ...rest] = previewItems;
+                      const hasMore = items.length > previewItems.length;
 
                       return (
                         <div
@@ -357,6 +407,16 @@ function App() {
                                 {item.char}
                               </button>
                             ))}
+                            {hasMore && (
+                              <button
+                                type="button"
+                                className="char-more"
+                                aria-label={`查看更多${initial}${TONE_LABELS[tone]}`}
+                                onClick={() => setMorePanel({ initial, tone, items })}
+                              >
+                                <MoreHorizontal size={18} />
+                              </button>
+                            )}
                           </div>
                         </div>
                       );
@@ -368,8 +428,47 @@ function App() {
               </article>
             );
           })}
+          <footer className="app-footer">
+            <span>作者</span>
+            <a href="https://github.com/holynova">{AUTHOR_NAME}</a>
+            <a href={REPO_URL}>GitHub</a>
+            <span>v{APP_VERSION}</span>
+          </footer>
         </div>
       </section>
+
+      {morePanel && (
+        <div className="more-overlay" role="dialog" aria-modal="true" aria-label="更多答案">
+          <div className="more-sheet">
+            <div className="more-head">
+              <div>
+                <p>{morePanel.initial} · {TONE_LABELS[morePanel.tone]}</p>
+                <strong>{rhymeLabel(activeReading, exactOnly)}</strong>
+              </div>
+              <button type="button" className="more-close" onClick={() => setMorePanel(null)} aria-label="关闭">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="more-grid">
+              {morePanel.items.map((item) => (
+                <button
+                  type="button"
+                  key={`${item.char}-${item.pinyin}`}
+                  data-final={itemFinal(item)}
+                  className={item.char === selectedChar ? 'more-char selected' : 'more-char'}
+                  onClick={() => setSelectedChar(item.char)}
+                  onDoubleClick={() => {
+                    setMorePanel(null);
+                    continueWith(item.char);
+                  }}
+                >
+                  {item.char}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
     </main>
   );

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-19T13:17:55.778Z",
+  "generatedAt": "2026-06-19T13:49:34.775Z",
   "source": "common-chinese-characters + SUBTLEX-CH-CHR + pinyin-pro",
   "initials": [
     "b",
@@ -45221,14 +45221,6 @@
           ],
           "4": [
             {
-              "char": "浙",
-              "pinyin": "zhe4",
-              "final": "e",
-              "rank": 2001632,
-              "commonTier": 1,
-              "frequency": 0
-            },
-            {
               "char": "这",
               "pinyin": "zhe4",
               "final": "e",
@@ -45243,6 +45235,14 @@
               "rank": 999999933,
               "commonTier": 2,
               "frequency": 67
+            },
+            {
+              "char": "浙",
+              "pinyin": "zhe4",
+              "final": "e",
+              "rank": 2001632,
+              "commonTier": 1,
+              "frequency": 0
             }
           ]
         }
@@ -45297,14 +45297,6 @@
             }
           ],
           "4": [
-            {
-              "char": "芍",
-              "pinyin": "que4",
-              "final": "ue",
-              "rank": 3000028,
-              "commonTier": 2,
-              "frequency": 0
-            },
             {
               "char": "确",
               "pinyin": "que4",
@@ -45376,6 +45368,14 @@
               "rank": 999999968,
               "commonTier": 1,
               "frequency": 32
+            },
+            {
+              "char": "芍",
+              "pinyin": "que4",
+              "final": "ue",
+              "rank": 3000028,
+              "commonTier": 2,
+              "frequency": 0
             }
           ]
         }
@@ -45754,6 +45754,86 @@
               "rank": 999998558,
               "commonTier": 1,
               "frequency": 1442
+            },
+            {
+              "char": "跃",
+              "pinyin": "yue4",
+              "final": "ue",
+              "rank": 999999039,
+              "commonTier": 1,
+              "frequency": 961
+            },
+            {
+              "char": "悦",
+              "pinyin": "yue4",
+              "final": "ue",
+              "rank": 999999332,
+              "commonTier": 1,
+              "frequency": 668
+            },
+            {
+              "char": "阅",
+              "pinyin": "yue4",
+              "final": "ue",
+              "rank": 999999375,
+              "commonTier": 1,
+              "frequency": 625
+            },
+            {
+              "char": "兑",
+              "pinyin": "yue4",
+              "final": "ue",
+              "rank": 999999613,
+              "commonTier": 2,
+              "frequency": 387
+            },
+            {
+              "char": "咽",
+              "pinyin": "ye4",
+              "final": "e",
+              "rank": 999999660,
+              "commonTier": 1,
+              "frequency": 340
+            },
+            {
+              "char": "岳",
+              "pinyin": "yue4",
+              "final": "ue",
+              "rank": 999999782,
+              "commonTier": 2,
+              "frequency": 218
+            },
+            {
+              "char": "腋",
+              "pinyin": "ye4",
+              "final": "e",
+              "rank": 999999915,
+              "commonTier": 2,
+              "frequency": 85
+            },
+            {
+              "char": "掖",
+              "pinyin": "ye4",
+              "final": "e",
+              "rank": 999999972,
+              "commonTier": 2,
+              "frequency": 28
+            },
+            {
+              "char": "粤",
+              "pinyin": "yue4",
+              "final": "ue",
+              "rank": 999999989,
+              "commonTier": 2,
+              "frequency": 11
+            },
+            {
+              "char": "谒",
+              "pinyin": "ye4",
+              "final": "e",
+              "rank": 999999996,
+              "commonTier": 2,
+              "frequency": 4
             }
           ]
         }
@@ -45931,6 +46011,54 @@
               "rank": 999998800,
               "commonTier": 1,
               "frequency": 1200
+            },
+            {
+              "char": "竭",
+              "pinyin": "jie2",
+              "final": "ie",
+              "rank": 999999174,
+              "commonTier": 1,
+              "frequency": 826
+            },
+            {
+              "char": "掘",
+              "pinyin": "jue2",
+              "final": "ue",
+              "rank": 999999190,
+              "commonTier": 1,
+              "frequency": 810
+            },
+            {
+              "char": "捷",
+              "pinyin": "jie2",
+              "final": "ie",
+              "rank": 999999200,
+              "commonTier": 1,
+              "frequency": 800
+            },
+            {
+              "char": "嚼",
+              "pinyin": "jue2",
+              "final": "ue",
+              "rank": 999999517,
+              "commonTier": 1,
+              "frequency": 483
+            },
+            {
+              "char": "诀",
+              "pinyin": "jue2",
+              "final": "ue",
+              "rank": 999999725,
+              "commonTier": 2,
+              "frequency": 275
+            },
+            {
+              "char": "倔",
+              "pinyin": "jue2",
+              "final": "ue",
+              "rank": 999999921,
+              "commonTier": 2,
+              "frequency": 79
             }
           ],
           "3": [
@@ -47644,20 +47772,20 @@
           ],
           "2": [
             {
-              "char": "芍",
-              "pinyin": "shao2",
-              "final": "ao",
-              "rank": 3000028,
-              "commonTier": 2,
-              "frequency": 0
-            },
-            {
               "char": "勺",
               "pinyin": "shao2",
               "final": "ao",
               "rank": 999999656,
               "commonTier": 1,
               "frequency": 344
+            },
+            {
+              "char": "芍",
+              "pinyin": "shao2",
+              "final": "ao",
+              "rank": 3000028,
+              "commonTier": 2,
+              "frequency": 0
             }
           ],
           "3": [
@@ -47839,6 +47967,14 @@
               "rank": 999999981,
               "commonTier": 2,
               "frequency": 19
+            },
+            {
+              "char": "嘹",
+              "pinyin": "liao2",
+              "final": "iao",
+              "rank": 999999999,
+              "commonTier": 2,
+              "frequency": 1
             }
           ],
           "3": [
@@ -50702,14 +50838,6 @@
           ],
           "3": [
             {
-              "char": "闽",
-              "pinyin": "min3",
-              "final": "in",
-              "rank": 3000305,
-              "commonTier": 2,
-              "frequency": 0
-            },
-            {
               "char": "敏",
               "pinyin": "min3",
               "final": "in",
@@ -50732,6 +50860,14 @@
               "rank": 999999949,
               "commonTier": 2,
               "frequency": 51
+            },
+            {
+              "char": "闽",
+              "pinyin": "min3",
+              "final": "in",
+              "rank": 3000305,
+              "commonTier": 2,
+              "frequency": 0
             }
           ],
           "4": [
@@ -50812,20 +50948,20 @@
           ],
           "4": [
             {
-              "char": "裉",
-              "pinyin": "ken4",
-              "final": "en",
-              "rank": 3000823,
-              "commonTier": 2,
-              "frequency": 0
-            },
-            {
               "char": "困",
               "pinyin": "kun4",
               "final": "un",
               "rank": 999994462,
               "commonTier": 1,
               "frequency": 5538
+            },
+            {
+              "char": "裉",
+              "pinyin": "ken4",
+              "final": "en",
+              "rank": 3000823,
+              "commonTier": 2,
+              "frequency": 0
             }
           ]
         }
@@ -50939,17 +51075,17 @@
               "rank": 999999938,
               "commonTier": 2,
               "frequency": 62
+            },
+            {
+              "char": "抡",
+              "pinyin": "lun2",
+              "final": "un",
+              "rank": 999999965,
+              "commonTier": 2,
+              "frequency": 35
             }
           ],
           "3": [
-            {
-              "char": "檩",
-              "pinyin": "lin3",
-              "final": "in",
-              "rank": 3000935,
-              "commonTier": 2,
-              "frequency": 0
-            },
             {
               "char": "凛",
               "pinyin": "lin3",
@@ -50957,6 +51093,14 @@
               "rank": 999999976,
               "commonTier": 2,
               "frequency": 24
+            },
+            {
+              "char": "檩",
+              "pinyin": "lin3",
+              "final": "in",
+              "rank": 3000935,
+              "commonTier": 2,
+              "frequency": 0
             }
           ],
           "4": [
@@ -52317,6 +52461,22 @@
               "rank": 999999631,
               "commonTier": 1,
               "frequency": 369
+            },
+            {
+              "char": "襟",
+              "pinyin": "jin1",
+              "final": "in",
+              "rank": 999999961,
+              "commonTier": 2,
+              "frequency": 39
+            },
+            {
+              "char": "钧",
+              "pinyin": "jun1",
+              "final": "un",
+              "rank": 999999974,
+              "commonTier": 2,
+              "frequency": 26
             }
           ],
           "2": [],
@@ -52458,6 +52618,14 @@
               "rank": 999999937,
               "commonTier": 2,
               "frequency": 63
+            },
+            {
+              "char": "竣",
+              "pinyin": "jun4",
+              "final": "un",
+              "rank": 999999993,
+              "commonTier": 2,
+              "frequency": 7
             }
           ]
         }
@@ -53319,14 +53487,6 @@
         "tones": {
           "1": [
             {
-              "char": "捌",
-              "pinyin": "ba1",
-              "final": "a",
-              "rank": 3000339,
-              "commonTier": 2,
-              "frequency": 0
-            },
-            {
               "char": "吧",
               "pinyin": "ba1",
               "final": "a",
@@ -53389,6 +53549,14 @@
               "rank": 999999892,
               "commonTier": 2,
               "frequency": 108
+            },
+            {
+              "char": "捌",
+              "pinyin": "ba1",
+              "final": "a",
+              "rank": 3000339,
+              "commonTier": 2,
+              "frequency": 0
             }
           ],
           "2": [
@@ -55804,20 +55972,20 @@
           ],
           "2": [
             {
-              "char": "荸",
-              "pinyin": "bi2",
-              "final": "i",
-              "rank": 3000347,
-              "commonTier": 2,
-              "frequency": 0
-            },
-            {
               "char": "鼻",
               "pinyin": "bi2",
               "final": "i",
               "rank": 999997627,
               "commonTier": 1,
               "frequency": 2373
+            },
+            {
+              "char": "荸",
+              "pinyin": "bi2",
+              "final": "i",
+              "rank": 3000347,
+              "commonTier": 2,
+              "frequency": 0
             }
           ],
           "3": [
@@ -55966,6 +56134,70 @@
               "rank": 999999458,
               "commonTier": 1,
               "frequency": 542
+            },
+            {
+              "char": "蔽",
+              "pinyin": "bi4",
+              "final": "i",
+              "rank": 999999534,
+              "commonTier": 1,
+              "frequency": 466
+            },
+            {
+              "char": "庇",
+              "pinyin": "bi4",
+              "final": "i",
+              "rank": 999999582,
+              "commonTier": 2,
+              "frequency": 418
+            },
+            {
+              "char": "泌",
+              "pinyin": "bi4",
+              "final": "i",
+              "rank": 999999829,
+              "commonTier": 2,
+              "frequency": 171
+            },
+            {
+              "char": "痹",
+              "pinyin": "bi4",
+              "final": "i",
+              "rank": 999999832,
+              "commonTier": 2,
+              "frequency": 168
+            },
+            {
+              "char": "辟",
+              "pinyin": "bi4",
+              "final": "i",
+              "rank": 999999891,
+              "commonTier": 1,
+              "frequency": 109
+            },
+            {
+              "char": "拂",
+              "pinyin": "bi4",
+              "final": "i",
+              "rank": 999999896,
+              "commonTier": 2,
+              "frequency": 104
+            },
+            {
+              "char": "璧",
+              "pinyin": "bi4",
+              "final": "i",
+              "rank": 999999968,
+              "commonTier": 2,
+              "frequency": 32
+            },
+            {
+              "char": "蓖",
+              "pinyin": "bi4",
+              "final": "i",
+              "rank": 999999985,
+              "commonTier": 2,
+              "frequency": 15
             }
           ]
         }
@@ -56564,6 +56796,102 @@
               "rank": 999992473,
               "commonTier": 1,
               "frequency": 7527
+            },
+            {
+              "char": "似",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999992507,
+              "commonTier": 1,
+              "frequency": 7493
+            },
+            {
+              "char": "誓",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999995071,
+              "commonTier": 1,
+              "frequency": 4929
+            },
+            {
+              "char": "势",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999995453,
+              "commonTier": 1,
+              "frequency": 4547
+            },
+            {
+              "char": "饰",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999998127,
+              "commonTier": 1,
+              "frequency": 1873
+            },
+            {
+              "char": "泽",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999998267,
+              "commonTier": 1,
+              "frequency": 1733
+            },
+            {
+              "char": "氏",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999999107,
+              "commonTier": 1,
+              "frequency": 893
+            },
+            {
+              "char": "逝",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999999219,
+              "commonTier": 1,
+              "frequency": 781
+            },
+            {
+              "char": "侍",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999999485,
+              "commonTier": 1,
+              "frequency": 515
+            },
+            {
+              "char": "嗜",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999999691,
+              "commonTier": 2,
+              "frequency": 309
+            },
+            {
+              "char": "拭",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999999830,
+              "commonTier": 2,
+              "frequency": 170
+            },
+            {
+              "char": "柿",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999999866,
+              "commonTier": 1,
+              "frequency": 134
+            },
+            {
+              "char": "恃",
+              "pinyin": "shi4",
+              "final": "i",
+              "rank": 999999973,
+              "commonTier": 2,
+              "frequency": 27
             }
           ]
         }
@@ -56873,6 +57201,150 @@
               "rank": 999998250,
               "commonTier": 1,
               "frequency": 1750
+            },
+            {
+              "char": "泄",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999998370,
+              "commonTier": 1,
+              "frequency": 1630
+            },
+            {
+              "char": "亿",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999998479,
+              "commonTier": 1,
+              "frequency": 1521
+            },
+            {
+              "char": "役",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999998978,
+              "commonTier": 1,
+              "frequency": 1022
+            },
+            {
+              "char": "抑",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999998991,
+              "commonTier": 2,
+              "frequency": 1009
+            },
+            {
+              "char": "谊",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999056,
+              "commonTier": 1,
+              "frequency": 944
+            },
+            {
+              "char": "疫",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999117,
+              "commonTier": 1,
+              "frequency": 883
+            },
+            {
+              "char": "翼",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999226,
+              "commonTier": 1,
+              "frequency": 774
+            },
+            {
+              "char": "逸",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999608,
+              "commonTier": 2,
+              "frequency": 392
+            },
+            {
+              "char": "亦",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999659,
+              "commonTier": 1,
+              "frequency": 341
+            },
+            {
+              "char": "绎",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999680,
+              "commonTier": 2,
+              "frequency": 320
+            },
+            {
+              "char": "溢",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999705,
+              "commonTier": 2,
+              "frequency": 295
+            },
+            {
+              "char": "译",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999744,
+              "commonTier": 1,
+              "frequency": 256
+            },
+            {
+              "char": "疙",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999845,
+              "commonTier": 2,
+              "frequency": 155
+            },
+            {
+              "char": "毅",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999858,
+              "commonTier": 1,
+              "frequency": 142
+            },
+            {
+              "char": "奕",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999907,
+              "commonTier": 2,
+              "frequency": 93
+            },
+            {
+              "char": "屹",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999962,
+              "commonTier": 2,
+              "frequency": 38
+            },
+            {
+              "char": "邑",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999986,
+              "commonTier": 2,
+              "frequency": 14
+            },
+            {
+              "char": "肄",
+              "pinyin": "yi4",
+              "final": "i",
+              "rank": 999999995,
+              "commonTier": 2,
+              "frequency": 5
             }
           ]
         }
@@ -56976,6 +57448,14 @@
               "rank": 999999500,
               "commonTier": 1,
               "frequency": 500
+            },
+            {
+              "char": "吱",
+              "pinyin": "zhi1",
+              "final": "i",
+              "rank": 999999787,
+              "commonTier": 2,
+              "frequency": 213
             }
           ],
           "2": [
@@ -57198,6 +57678,54 @@
               "rank": 999999573,
               "commonTier": 2,
               "frequency": 427
+            },
+            {
+              "char": "挚",
+              "pinyin": "zhi4",
+              "final": "i",
+              "rank": 999999627,
+              "commonTier": 2,
+              "frequency": 373
+            },
+            {
+              "char": "秩",
+              "pinyin": "zhi4",
+              "final": "i",
+              "rank": 999999649,
+              "commonTier": 1,
+              "frequency": 351
+            },
+            {
+              "char": "稚",
+              "pinyin": "zhi4",
+              "final": "i",
+              "rank": 999999663,
+              "commonTier": 2,
+              "frequency": 337
+            },
+            {
+              "char": "掷",
+              "pinyin": "zhi4",
+              "final": "i",
+              "rank": 999999733,
+              "commonTier": 2,
+              "frequency": 267
+            },
+            {
+              "char": "帜",
+              "pinyin": "zhi4",
+              "final": "i",
+              "rank": 999999776,
+              "commonTier": 1,
+              "frequency": 224
+            },
+            {
+              "char": "滞",
+              "pinyin": "zhi4",
+              "final": "i",
+              "rank": 999999794,
+              "commonTier": 2,
+              "frequency": 206
             }
           ]
         }
@@ -57443,6 +57971,62 @@
               "rank": 999999710,
               "commonTier": 1,
               "frequency": 290
+            },
+            {
+              "char": "雳",
+              "pinyin": "li4",
+              "final": "i",
+              "rank": 999999816,
+              "commonTier": 2,
+              "frequency": 184
+            },
+            {
+              "char": "沥",
+              "pinyin": "li4",
+              "final": "i",
+              "rank": 999999937,
+              "commonTier": 2,
+              "frequency": 63
+            },
+            {
+              "char": "俐",
+              "pinyin": "li4",
+              "final": "i",
+              "rank": 999999943,
+              "commonTier": 2,
+              "frequency": 57
+            },
+            {
+              "char": "砾",
+              "pinyin": "li4",
+              "final": "i",
+              "rank": 999999946,
+              "commonTier": 2,
+              "frequency": 54
+            },
+            {
+              "char": "痢",
+              "pinyin": "li4",
+              "final": "i",
+              "rank": 999999968,
+              "commonTier": 2,
+              "frequency": 32
+            },
+            {
+              "char": "吏",
+              "pinyin": "li4",
+              "final": "i",
+              "rank": 999999977,
+              "commonTier": 2,
+              "frequency": 23
+            },
+            {
+              "char": "荔",
+              "pinyin": "li4",
+              "final": "i",
+              "rank": 999999991,
+              "commonTier": 2,
+              "frequency": 9
             }
           ]
         }
@@ -57760,6 +58344,22 @@
               "rank": 999999936,
               "commonTier": 2,
               "frequency": 64
+            },
+            {
+              "char": "荠",
+              "pinyin": "qi2",
+              "final": "i",
+              "rank": 999999995,
+              "commonTier": 2,
+              "frequency": 5
+            },
+            {
+              "char": "畦",
+              "pinyin": "qi2",
+              "final": "i",
+              "rank": 999999999,
+              "commonTier": 2,
+              "frequency": 1
             }
           ],
           "3": [
@@ -57995,6 +58595,62 @@
               "rank": 999998678,
               "commonTier": 1,
               "frequency": 1322
+            },
+            {
+              "char": "饥",
+              "pinyin": "ji1",
+              "final": "i",
+              "rank": 999999388,
+              "commonTier": 1,
+              "frequency": 612
+            },
+            {
+              "char": "稽",
+              "pinyin": "ji1",
+              "final": "i",
+              "rank": 999999444,
+              "commonTier": 2,
+              "frequency": 556
+            },
+            {
+              "char": "叽",
+              "pinyin": "ji1",
+              "final": "i",
+              "rank": 999999776,
+              "commonTier": 2,
+              "frequency": 224
+            },
+            {
+              "char": "唧",
+              "pinyin": "ji1",
+              "final": "i",
+              "rank": 999999802,
+              "commonTier": 2,
+              "frequency": 198
+            },
+            {
+              "char": "畸",
+              "pinyin": "ji1",
+              "final": "i",
+              "rank": 999999853,
+              "commonTier": 2,
+              "frequency": 147
+            },
+            {
+              "char": "讥",
+              "pinyin": "ji1",
+              "final": "i",
+              "rank": 999999941,
+              "commonTier": 2,
+              "frequency": 59
+            },
+            {
+              "char": "箕",
+              "pinyin": "ji1",
+              "final": "i",
+              "rank": 999999990,
+              "commonTier": 2,
+              "frequency": 10
             }
           ],
           "2": [
@@ -58093,6 +58749,14 @@
               "rank": 999999597,
               "commonTier": 2,
               "frequency": 403
+            },
+            {
+              "char": "籍",
+              "pinyin": "ji2",
+              "final": "i",
+              "rank": 999999643,
+              "commonTier": 1,
+              "frequency": 357
             }
           ],
           "3": [
@@ -58249,6 +58913,86 @@
               "rank": 999997303,
               "commonTier": 1,
               "frequency": 2697
+            },
+            {
+              "char": "济",
+              "pinyin": "ji4",
+              "final": "i",
+              "rank": 999998271,
+              "commonTier": 1,
+              "frequency": 1729
+            },
+            {
+              "char": "妓",
+              "pinyin": "ji4",
+              "final": "i",
+              "rank": 999998291,
+              "commonTier": 2,
+              "frequency": 1709
+            },
+            {
+              "char": "齐",
+              "pinyin": "ji4",
+              "final": "i",
+              "rank": 999998329,
+              "commonTier": 1,
+              "frequency": 1671
+            },
+            {
+              "char": "忌",
+              "pinyin": "ji4",
+              "final": "i",
+              "rank": 999998668,
+              "commonTier": 1,
+              "frequency": 1332
+            },
+            {
+              "char": "绩",
+              "pinyin": "ji4",
+              "final": "i",
+              "rank": 999998872,
+              "commonTier": 1,
+              "frequency": 1128
+            },
+            {
+              "char": "寂",
+              "pinyin": "ji4",
+              "final": "i",
+              "rank": 999999285,
+              "commonTier": 2,
+              "frequency": 715
+            },
+            {
+              "char": "祭",
+              "pinyin": "ji4",
+              "final": "i",
+              "rank": 999999440,
+              "commonTier": 2,
+              "frequency": 560
+            },
+            {
+              "char": "冀",
+              "pinyin": "ji4",
+              "final": "i",
+              "rank": 999999979,
+              "commonTier": 2,
+              "frequency": 21
+            },
+            {
+              "char": "荠",
+              "pinyin": "ji4",
+              "final": "i",
+              "rank": 999999995,
+              "commonTier": 2,
+              "frequency": 5
+            },
+            {
+              "char": "鲫",
+              "pinyin": "ji4",
+              "final": "i",
+              "rank": 999999998,
+              "commonTier": 2,
+              "frequency": 2
             }
           ]
         }
@@ -58649,6 +59393,86 @@
               "rank": 999999460,
               "commonTier": 1,
               "frequency": 540
+            },
+            {
+              "char": "熙",
+              "pinyin": "xi1",
+              "final": "i",
+              "rank": 999999519,
+              "commonTier": 2,
+              "frequency": 481
+            },
+            {
+              "char": "夕",
+              "pinyin": "xi1",
+              "final": "i",
+              "rank": 999999526,
+              "commonTier": 1,
+              "frequency": 474
+            },
+            {
+              "char": "熄",
+              "pinyin": "xi1",
+              "final": "i",
+              "rank": 999999600,
+              "commonTier": 1,
+              "frequency": 400
+            },
+            {
+              "char": "晰",
+              "pinyin": "xi1",
+              "final": "i",
+              "rank": 999999631,
+              "commonTier": 2,
+              "frequency": 369
+            },
+            {
+              "char": "嬉",
+              "pinyin": "xi1",
+              "final": "i",
+              "rank": 999999672,
+              "commonTier": 2,
+              "frequency": 328
+            },
+            {
+              "char": "溪",
+              "pinyin": "xi1",
+              "final": "i",
+              "rank": 999999678,
+              "commonTier": 1,
+              "frequency": 322
+            },
+            {
+              "char": "昔",
+              "pinyin": "xi1",
+              "final": "i",
+              "rank": 999999727,
+              "commonTier": 2,
+              "frequency": 273
+            },
+            {
+              "char": "犀",
+              "pinyin": "xi1",
+              "final": "i",
+              "rank": 999999825,
+              "commonTier": 2,
+              "frequency": 175
+            },
+            {
+              "char": "栖",
+              "pinyin": "xi1",
+              "final": "i",
+              "rank": 999999836,
+              "commonTier": 2,
+              "frequency": 164
+            },
+            {
+              "char": "蟋",
+              "pinyin": "xi1",
+              "final": "i",
+              "rank": 999999938,
+              "commonTier": 2,
+              "frequency": 62
             }
           ],
           "2": [
@@ -59410,14 +60234,6 @@
           ],
           "2": [
             {
-              "char": "秫",
-              "pinyin": "shu2",
-              "final": "u",
-              "rank": 3000390,
-              "commonTier": 2,
-              "frequency": 0
-            },
-            {
               "char": "术",
               "pinyin": "shu2",
               "final": "u",
@@ -59448,6 +60264,14 @@
               "rank": 999999204,
               "commonTier": 2,
               "frequency": 796
+            },
+            {
+              "char": "秫",
+              "pinyin": "shu2",
+              "final": "u",
+              "rank": 3000390,
+              "commonTier": 2,
+              "frequency": 0
             }
           ],
           "3": [
@@ -60752,6 +61576,22 @@
               "rank": 999999514,
               "commonTier": 1,
               "frequency": 486
+            },
+            {
+              "char": "炬",
+              "pinyin": "ju4",
+              "final": "u",
+              "rank": 999999551,
+              "commonTier": 2,
+              "frequency": 449
+            },
+            {
+              "char": "渠",
+              "pinyin": "ju4",
+              "final": "u",
+              "rank": 999999771,
+              "commonTier": 1,
+              "frequency": 229
             }
           ]
         }
@@ -61315,6 +62155,22 @@
               "rank": 999999925,
               "commonTier": 2,
               "frequency": 75
+            },
+            {
+              "char": "榆",
+              "pinyin": "yu2",
+              "final": "u",
+              "rank": 999999954,
+              "commonTier": 1,
+              "frequency": 46
+            },
+            {
+              "char": "隅",
+              "pinyin": "yu2",
+              "final": "u",
+              "rank": 999999980,
+              "commonTier": 2,
+              "frequency": 20
             }
           ],
           "3": [
@@ -61471,6 +62327,118 @@
               "rank": 999997788,
               "commonTier": 2,
               "frequency": 2212
+            },
+            {
+              "char": "域",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999997997,
+              "commonTier": 1,
+              "frequency": 2003
+            },
+            {
+              "char": "谷",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999998133,
+              "commonTier": 1,
+              "frequency": 1867
+            },
+            {
+              "char": "誉",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999998539,
+              "commonTier": 1,
+              "frequency": 1461
+            },
+            {
+              "char": "郁",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999998743,
+              "commonTier": 2,
+              "frequency": 1257
+            },
+            {
+              "char": "玉",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999998760,
+              "commonTier": 1,
+              "frequency": 1240
+            },
+            {
+              "char": "愈",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999998842,
+              "commonTier": 1,
+              "frequency": 1158
+            },
+            {
+              "char": "豫",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999999363,
+              "commonTier": 2,
+              "frequency": 637
+            },
+            {
+              "char": "御",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999999370,
+              "commonTier": 1,
+              "frequency": 630
+            },
+            {
+              "char": "喻",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999999409,
+              "commonTier": 2,
+              "frequency": 591
+            },
+            {
+              "char": "裕",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999999764,
+              "commonTier": 1,
+              "frequency": 236
+            },
+            {
+              "char": "粥",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999999829,
+              "commonTier": 1,
+              "frequency": 171
+            },
+            {
+              "char": "吁",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999999850,
+              "commonTier": 2,
+              "frequency": 150
+            },
+            {
+              "char": "芋",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999999921,
+              "commonTier": 2,
+              "frequency": 79
+            },
+            {
+              "char": "蔚",
+              "pinyin": "yu4",
+              "final": "u",
+              "rank": 999999941,
+              "commonTier": 2,
+              "frequency": 59
             }
           ]
         }
@@ -61845,6 +62813,38 @@
               "rank": 999999551,
               "commonTier": 2,
               "frequency": 449
+            },
+            {
+              "char": "辐",
+              "pinyin": "fu2",
+              "final": "u",
+              "rank": 999999569,
+              "commonTier": 2,
+              "frequency": 431
+            },
+            {
+              "char": "袱",
+              "pinyin": "fu2",
+              "final": "u",
+              "rank": 999999840,
+              "commonTier": 2,
+              "frequency": 160
+            },
+            {
+              "char": "拂",
+              "pinyin": "fu2",
+              "final": "u",
+              "rank": 999999896,
+              "commonTier": 2,
+              "frequency": 104
+            },
+            {
+              "char": "凫",
+              "pinyin": "fu2",
+              "final": "u",
+              "rank": 999999999,
+              "commonTier": 2,
+              "frequency": 1
             }
           ],
           "3": [
@@ -62017,6 +63017,38 @@
               "rank": 999999214,
               "commonTier": 1,
               "frequency": 786
+            },
+            {
+              "char": "赴",
+              "pinyin": "fu4",
+              "final": "u",
+              "rank": 999999465,
+              "commonTier": 1,
+              "frequency": 535
+            },
+            {
+              "char": "傅",
+              "pinyin": "fu4",
+              "final": "u",
+              "rank": 999999576,
+              "commonTier": 1,
+              "frequency": 424
+            },
+            {
+              "char": "咐",
+              "pinyin": "fu4",
+              "final": "u",
+              "rank": 999999650,
+              "commonTier": 1,
+              "frequency": 350
+            },
+            {
+              "char": "缚",
+              "pinyin": "fu4",
+              "final": "u",
+              "rank": 999999693,
+              "commonTier": 2,
+              "frequency": 307
             }
           ]
         }
@@ -63043,14 +64075,6 @@
           ],
           "2": [
             {
-              "char": "蛉",
-              "pinyin": "ling2",
-              "final": "ing",
-              "rank": 3000492,
-              "commonTier": 2,
-              "frequency": 0
-            },
-            {
               "char": "令",
               "pinyin": "ling2",
               "final": "ing",
@@ -63137,6 +64161,30 @@
               "rank": 999999971,
               "commonTier": 2,
               "frequency": 29
+            },
+            {
+              "char": "楞",
+              "pinyin": "leng2",
+              "final": "eng",
+              "rank": 999999984,
+              "commonTier": 2,
+              "frequency": 16
+            },
+            {
+              "char": "翎",
+              "pinyin": "ling2",
+              "final": "ing",
+              "rank": 999999998,
+              "commonTier": 2,
+              "frequency": 2
+            },
+            {
+              "char": "蛉",
+              "pinyin": "ling2",
+              "final": "ing",
+              "rank": 3000492,
+              "commonTier": 2,
+              "frequency": 0
             }
           ],
           "3": [
@@ -63207,14 +64255,6 @@
             }
           ],
           "2": [
-            {
-              "char": "螟",
-              "pinyin": "ming2",
-              "final": "ing",
-              "rank": 3000910,
-              "commonTier": 2,
-              "frequency": 0
-            },
             {
               "char": "明",
               "pinyin": "ming2",
@@ -63294,6 +64334,14 @@
               "rank": 999999939,
               "commonTier": 2,
               "frequency": 61
+            },
+            {
+              "char": "螟",
+              "pinyin": "ming2",
+              "final": "ing",
+              "rank": 3000910,
+              "commonTier": 2,
+              "frequency": 0
             }
           ],
           "3": [
@@ -65144,6 +66192,54 @@
               "rank": 999999833,
               "commonTier": 2,
               "frequency": 167
+            },
+            {
+              "char": "膨",
+              "pinyin": "peng2",
+              "final": "eng",
+              "rank": 999999841,
+              "commonTier": 1,
+              "frequency": 159
+            },
+            {
+              "char": "冯",
+              "pinyin": "ping2",
+              "final": "ing",
+              "rank": 999999871,
+              "commonTier": 2,
+              "frequency": 129
+            },
+            {
+              "char": "萍",
+              "pinyin": "ping2",
+              "final": "ing",
+              "rank": 999999933,
+              "commonTier": 1,
+              "frequency": 67
+            },
+            {
+              "char": "澎",
+              "pinyin": "peng2",
+              "final": "eng",
+              "rank": 999999944,
+              "commonTier": 2,
+              "frequency": 56
+            },
+            {
+              "char": "鹏",
+              "pinyin": "peng2",
+              "final": "eng",
+              "rank": 999999985,
+              "commonTier": 2,
+              "frequency": 15
+            },
+            {
+              "char": "硼",
+              "pinyin": "peng2",
+              "final": "eng",
+              "rank": 999999991,
+              "commonTier": 2,
+              "frequency": 9
             }
           ],
           "3": [
@@ -65856,6 +66952,102 @@
               "rank": 999998179,
               "commonTier": 1,
               "frequency": 1821
+            },
+            {
+              "char": "缘",
+              "pinyin": "yuan2",
+              "final": "uan",
+              "rank": 999998350,
+              "commonTier": 1,
+              "frequency": 1650
+            },
+            {
+              "char": "岩",
+              "pinyin": "yan2",
+              "final": "an",
+              "rank": 999999038,
+              "commonTier": 1,
+              "frequency": 962
+            },
+            {
+              "char": "沿",
+              "pinyin": "yan2",
+              "final": "an",
+              "rank": 999999123,
+              "commonTier": 1,
+              "frequency": 877
+            },
+            {
+              "char": "炎",
+              "pinyin": "yan2",
+              "final": "an",
+              "rank": 999999175,
+              "commonTier": 1,
+              "frequency": 825
+            },
+            {
+              "char": "盐",
+              "pinyin": "yan2",
+              "final": "an",
+              "rank": 999999179,
+              "commonTier": 1,
+              "frequency": 821
+            },
+            {
+              "char": "铅",
+              "pinyin": "yan2",
+              "final": "an",
+              "rank": 999999546,
+              "commonTier": 1,
+              "frequency": 454
+            },
+            {
+              "char": "猿",
+              "pinyin": "yuan2",
+              "final": "uan",
+              "rank": 999999812,
+              "commonTier": 2,
+              "frequency": 188
+            },
+            {
+              "char": "檐",
+              "pinyin": "yan2",
+              "final": "an",
+              "rank": 999999887,
+              "commonTier": 2,
+              "frequency": 113
+            },
+            {
+              "char": "阎",
+              "pinyin": "yan2",
+              "final": "an",
+              "rank": 999999969,
+              "commonTier": 2,
+              "frequency": 31
+            },
+            {
+              "char": "蜒",
+              "pinyin": "yan2",
+              "final": "an",
+              "rank": 999999984,
+              "commonTier": 2,
+              "frequency": 16
+            },
+            {
+              "char": "辕",
+              "pinyin": "yuan2",
+              "final": "uan",
+              "rank": 999999993,
+              "commonTier": 2,
+              "frequency": 7
+            },
+            {
+              "char": "袁",
+              "pinyin": "yuan2",
+              "final": "uan",
+              "rank": 999999998,
+              "commonTier": 2,
+              "frequency": 2
             }
           ],
           "3": [
@@ -65909,14 +67101,6 @@
             }
           ],
           "4": [
-            {
-              "char": "堰",
-              "pinyin": "yan4",
-              "final": "an",
-              "rank": 3000584,
-              "commonTier": 2,
-              "frequency": 0
-            },
             {
               "char": "远",
               "pinyin": "yuan4",
@@ -66004,6 +67188,54 @@
               "rank": 999999660,
               "commonTier": 1,
               "frequency": 340
+            },
+            {
+              "char": "燕",
+              "pinyin": "yan4",
+              "final": "an",
+              "rank": 999999690,
+              "commonTier": 1,
+              "frequency": 310
+            },
+            {
+              "char": "谚",
+              "pinyin": "yan4",
+              "final": "an",
+              "rank": 999999903,
+              "commonTier": 2,
+              "frequency": 97
+            },
+            {
+              "char": "唁",
+              "pinyin": "yan4",
+              "final": "an",
+              "rank": 999999964,
+              "commonTier": 2,
+              "frequency": 36
+            },
+            {
+              "char": "雁",
+              "pinyin": "yan4",
+              "final": "an",
+              "rank": 999999982,
+              "commonTier": 1,
+              "frequency": 18
+            },
+            {
+              "char": "砚",
+              "pinyin": "yan4",
+              "final": "an",
+              "rank": 999999995,
+              "commonTier": 2,
+              "frequency": 5
+            },
+            {
+              "char": "堰",
+              "pinyin": "yan4",
+              "final": "an",
+              "rank": 3000584,
+              "commonTier": 2,
+              "frequency": 0
             }
           ]
         }
@@ -66317,6 +67549,54 @@
               "rank": 999999590,
               "commonTier": 2,
               "frequency": 410
+            },
+            {
+              "char": "痪",
+              "pinyin": "huan4",
+              "final": "uan",
+              "rank": 999999754,
+              "commonTier": 2,
+              "frequency": 246
+            },
+            {
+              "char": "焊",
+              "pinyin": "han4",
+              "final": "an",
+              "rank": 999999829,
+              "commonTier": 2,
+              "frequency": 171
+            },
+            {
+              "char": "捍",
+              "pinyin": "han4",
+              "final": "an",
+              "rank": 999999839,
+              "commonTier": 2,
+              "frequency": 161
+            },
+            {
+              "char": "旱",
+              "pinyin": "han4",
+              "final": "an",
+              "rank": 999999886,
+              "commonTier": 1,
+              "frequency": 114
+            },
+            {
+              "char": "涣",
+              "pinyin": "huan4",
+              "final": "uan",
+              "rank": 999999985,
+              "commonTier": 2,
+              "frequency": 15
+            },
+            {
+              "char": "宦",
+              "pinyin": "huan4",
+              "final": "uan",
+              "rank": 999999996,
+              "commonTier": 2,
+              "frequency": 4
             }
           ]
         }
@@ -66502,6 +67782,14 @@
               "rank": 999999933,
               "commonTier": 2,
               "frequency": 67
+            },
+            {
+              "char": "漩",
+              "pinyin": "xuan2",
+              "final": "uan",
+              "rank": 999999935,
+              "commonTier": 2,
+              "frequency": 65
             }
           ],
           "3": [
@@ -66658,6 +67946,22 @@
               "rank": 999999469,
               "commonTier": 2,
               "frequency": 531
+            },
+            {
+              "char": "县",
+              "pinyin": "xian4",
+              "final": "ian",
+              "rank": 999999606,
+              "commonTier": 1,
+              "frequency": 394
+            },
+            {
+              "char": "羡",
+              "pinyin": "xian4",
+              "final": "ian",
+              "rank": 999999703,
+              "commonTier": 1,
+              "frequency": 297
             }
           ]
         }
@@ -66878,6 +68182,94 @@
               "rank": 999998628,
               "commonTier": 1,
               "frequency": 1372
+            },
+            {
+              "char": "垫",
+              "pinyin": "dian4",
+              "final": "ian",
+              "rank": 999998897,
+              "commonTier": 1,
+              "frequency": 1103
+            },
+            {
+              "char": "淡",
+              "pinyin": "dan4",
+              "final": "an",
+              "rank": 999998969,
+              "commonTier": 1,
+              "frequency": 1031
+            },
+            {
+              "char": "锻",
+              "pinyin": "duan4",
+              "final": "uan",
+              "rank": 999999510,
+              "commonTier": 1,
+              "frequency": 490
+            },
+            {
+              "char": "甸",
+              "pinyin": "dian4",
+              "final": "ian",
+              "rank": 999999828,
+              "commonTier": 2,
+              "frequency": 172
+            },
+            {
+              "char": "玷",
+              "pinyin": "dian4",
+              "final": "ian",
+              "rank": 999999842,
+              "commonTier": 2,
+              "frequency": 158
+            },
+            {
+              "char": "氮",
+              "pinyin": "dan4",
+              "final": "an",
+              "rank": 999999862,
+              "commonTier": 2,
+              "frequency": 138
+            },
+            {
+              "char": "惦",
+              "pinyin": "dian4",
+              "final": "ian",
+              "rank": 999999878,
+              "commonTier": 2,
+              "frequency": 122
+            },
+            {
+              "char": "奠",
+              "pinyin": "dian4",
+              "final": "ian",
+              "rank": 999999930,
+              "commonTier": 2,
+              "frequency": 70
+            },
+            {
+              "char": "缎",
+              "pinyin": "duan4",
+              "final": "uan",
+              "rank": 999999936,
+              "commonTier": 1,
+              "frequency": 64
+            },
+            {
+              "char": "淀",
+              "pinyin": "dian4",
+              "final": "ian",
+              "rank": 999999951,
+              "commonTier": 2,
+              "frequency": 49
+            },
+            {
+              "char": "佃",
+              "pinyin": "dian4",
+              "final": "ian",
+              "rank": 999999984,
+              "commonTier": 2,
+              "frequency": 16
             }
           ]
         }
@@ -67031,6 +68423,38 @@
               "rank": 999999906,
               "commonTier": 2,
               "frequency": 94
+            },
+            {
+              "char": "檀",
+              "pinyin": "tan2",
+              "final": "an",
+              "rank": 999999948,
+              "commonTier": 2,
+              "frequency": 52
+            },
+            {
+              "char": "恬",
+              "pinyin": "tian2",
+              "final": "ian",
+              "rank": 999999980,
+              "commonTier": 2,
+              "frequency": 20
+            },
+            {
+              "char": "佃",
+              "pinyin": "tian2",
+              "final": "ian",
+              "rank": 999999984,
+              "commonTier": 2,
+              "frequency": 16
+            },
+            {
+              "char": "昙",
+              "pinyin": "tan2",
+              "final": "an",
+              "rank": 999999987,
+              "commonTier": 2,
+              "frequency": 13
             }
           ],
           "3": [
@@ -67245,6 +68669,38 @@
               "rank": 999999272,
               "commonTier": 1,
               "frequency": 728
+            },
+            {
+              "char": "兼",
+              "pinyin": "jian1",
+              "final": "ian",
+              "rank": 999999304,
+              "commonTier": 1,
+              "frequency": 696
+            },
+            {
+              "char": "溅",
+              "pinyin": "jian1",
+              "final": "ian",
+              "rank": 999999683,
+              "commonTier": 2,
+              "frequency": 317
+            },
+            {
+              "char": "歼",
+              "pinyin": "jian1",
+              "final": "ian",
+              "rank": 999999931,
+              "commonTier": 1,
+              "frequency": 69
+            },
+            {
+              "char": "鹃",
+              "pinyin": "juan1",
+              "final": "uan",
+              "rank": 999999978,
+              "commonTier": 2,
+              "frequency": 22
             }
           ],
           "2": [],
@@ -67434,6 +68890,86 @@
               "rank": 999998593,
               "commonTier": 1,
               "frequency": 1407
+            },
+            {
+              "char": "鉴",
+              "pinyin": "jian4",
+              "final": "ian",
+              "rank": 999998684,
+              "commonTier": 1,
+              "frequency": 1316
+            },
+            {
+              "char": "箭",
+              "pinyin": "jian4",
+              "final": "ian",
+              "rank": 999998709,
+              "commonTier": 1,
+              "frequency": 1291
+            },
+            {
+              "char": "渐",
+              "pinyin": "jian4",
+              "final": "ian",
+              "rank": 999998812,
+              "commonTier": 1,
+              "frequency": 1188
+            },
+            {
+              "char": "倦",
+              "pinyin": "juan4",
+              "final": "uan",
+              "rank": 999999063,
+              "commonTier": 1,
+              "frequency": 937
+            },
+            {
+              "char": "荐",
+              "pinyin": "jian4",
+              "final": "ian",
+              "rank": 999999237,
+              "commonTier": 1,
+              "frequency": 763
+            },
+            {
+              "char": "溅",
+              "pinyin": "jian4",
+              "final": "ian",
+              "rank": 999999683,
+              "commonTier": 2,
+              "frequency": 317
+            },
+            {
+              "char": "践",
+              "pinyin": "jian4",
+              "final": "ian",
+              "rank": 999999724,
+              "commonTier": 1,
+              "frequency": 276
+            },
+            {
+              "char": "眷",
+              "pinyin": "juan4",
+              "final": "uan",
+              "rank": 999999862,
+              "commonTier": 2,
+              "frequency": 138
+            },
+            {
+              "char": "绢",
+              "pinyin": "juan4",
+              "final": "uan",
+              "rank": 999999922,
+              "commonTier": 1,
+              "frequency": 78
+            },
+            {
+              "char": "涧",
+              "pinyin": "jian4",
+              "final": "ian",
+              "rank": 999999999,
+              "commonTier": 2,
+              "frequency": 1
             }
           ]
         }
@@ -68633,6 +70169,14 @@
               "rank": 999999802,
               "commonTier": 1,
               "frequency": 198
+            },
+            {
+              "char": "瓣",
+              "pinyin": "ban4",
+              "final": "an",
+              "rank": 999999835,
+              "commonTier": 1,
+              "frequency": 165
             }
           ]
         }
@@ -69659,6 +71203,22 @@
               "rank": 999999929,
               "commonTier": 1,
               "frequency": 71
+            },
+            {
+              "char": "澜",
+              "pinyin": "lan2",
+              "final": "an",
+              "rank": 999999938,
+              "commonTier": 2,
+              "frequency": 62
+            },
+            {
+              "char": "峦",
+              "pinyin": "luan2",
+              "final": "uan",
+              "rank": 999999979,
+              "commonTier": 2,
+              "frequency": 21
             }
           ],
           "3": [
@@ -69964,14 +71524,6 @@
         "tones": {
           "1": [
             {
-              "char": "湘",
-              "pinyin": "xiang1",
-              "final": "iang",
-              "rank": 3000663,
-              "commonTier": 2,
-              "frequency": 0
-            },
-            {
               "char": "相",
               "pinyin": "xiang1",
               "final": "iang",
@@ -70018,6 +71570,14 @@
               "rank": 999999863,
               "commonTier": 2,
               "frequency": 137
+            },
+            {
+              "char": "湘",
+              "pinyin": "xiang1",
+              "final": "iang",
+              "rank": 3000663,
+              "commonTier": 2,
+              "frequency": 0
             }
           ],
           "2": [
@@ -72717,14 +74277,6 @@
           ],
           "2": [
             {
-              "char": "渤",
-              "pinyin": "bo2",
-              "final": "o",
-              "rank": 3000664,
-              "commonTier": 2,
-              "frequency": 0
-            },
-            {
               "char": "博",
               "pinyin": "bo2",
               "final": "o",
@@ -72811,6 +74363,30 @@
               "rank": 999999666,
               "commonTier": 1,
               "frequency": 334
+            },
+            {
+              "char": "簿",
+              "pinyin": "bo2",
+              "final": "o",
+              "rank": 999999679,
+              "commonTier": 2,
+              "frequency": 321
+            },
+            {
+              "char": "舶",
+              "pinyin": "bo2",
+              "final": "o",
+              "rank": 999999991,
+              "commonTier": 2,
+              "frequency": 9
+            },
+            {
+              "char": "渤",
+              "pinyin": "bo2",
+              "final": "o",
+              "rank": 3000664,
+              "commonTier": 2,
+              "frequency": 0
             }
           ],
           "3": [
@@ -73128,6 +74704,46 @@
               "rank": 999998991,
               "commonTier": 1,
               "frequency": 1009
+            },
+            {
+              "char": "抹",
+              "pinyin": "mo4",
+              "final": "o",
+              "rank": 999999133,
+              "commonTier": 1,
+              "frequency": 867
+            },
+            {
+              "char": "寞",
+              "pinyin": "mo4",
+              "final": "o",
+              "rank": 999999530,
+              "commonTier": 2,
+              "frequency": 470
+            },
+            {
+              "char": "沫",
+              "pinyin": "mo4",
+              "final": "o",
+              "rank": 999999696,
+              "commonTier": 1,
+              "frequency": 304
+            },
+            {
+              "char": "茉",
+              "pinyin": "mo4",
+              "final": "o",
+              "rank": 999999744,
+              "commonTier": 2,
+              "frequency": 256
+            },
+            {
+              "char": "蟆",
+              "pinyin": "mo4",
+              "final": "o",
+              "rank": 999999918,
+              "commonTier": 2,
+              "frequency": 82
             }
           ]
         }
@@ -76900,6 +78516,30 @@
               "rank": 999999283,
               "commonTier": 1,
               "frequency": 717
+            },
+            {
+              "char": "魏",
+              "pinyin": "wei4",
+              "final": "ei",
+              "rank": 999999865,
+              "commonTier": 2,
+              "frequency": 135
+            },
+            {
+              "char": "蔚",
+              "pinyin": "wei4",
+              "final": "ei",
+              "rank": 999999941,
+              "commonTier": 2,
+              "frequency": 59
+            },
+            {
+              "char": "猬",
+              "pinyin": "wei4",
+              "final": "ei",
+              "rank": 999999984,
+              "commonTier": 2,
+              "frequency": 16
             }
           ]
         }

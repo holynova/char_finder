@@ -183,8 +183,14 @@ for (const rhyme of Object.keys(groups)) {
   for (const initial of Object.keys(groups[rhyme])) {
     for (const tone of ['1', '2', '3', '4']) {
       groups[rhyme][initial].tones[tone] = groups[rhyme][initial].tones[tone]
-        .sort((a, b) => a.rank - b.rank || a.char.localeCompare(b.char, 'zh-Hans-CN'))
-        .slice(0, 12);
+        .sort(
+          (a, b) =>
+            b.frequency - a.frequency ||
+            a.commonTier - b.commonTier ||
+            a.rank - b.rank ||
+            a.char.localeCompare(b.char, 'zh-Hans-CN'),
+        )
+        .slice(0, 40);
     }
   }
 }
