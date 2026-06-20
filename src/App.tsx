@@ -155,6 +155,16 @@ function pickToneFirstRandom(items: RhymeItem[], preferredTone: Tone | undefined
   return [...pickRandom(preferred, seed), ...pickRandom(fallback, seed + 1)].slice(0, 8);
 }
 
+const trackEvent = (name: string, props?: Record<string, any>) => {
+  try {
+    if (window.umami && typeof window.umami.track === 'function') {
+      window.umami.track(name, props);
+    }
+  } catch (err) {
+    console.error('Umami track failed:', err);
+  }
+};
+
 function App() {
   const [query, setQuery] = useState('月光');
   const [readingIndex, setReadingIndex] = useState(0);
@@ -177,6 +187,15 @@ function App() {
     () => index.initials.filter((initial) => hasItems(rhymeGroups[initial], commonOnly, activeReading?.final, exactOnly)),
     [activeReading?.final, commonOnly, exactOnly, rhymeGroups],
   );
+
+  // Debounced search query tracking
+  useEffect(() => {
+    if (!query || !query.trim()) return;
+    const timer = setTimeout(() => {
+      trackEvent('search_query', { query });
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [query]);
 
   useEffect(() => {
     setReadingIndex(0);
@@ -209,6 +228,7 @@ function App() {
     setQuery(char);
     setSelectedChar(char);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    trackEvent('continue_rhyme', { char });
   };
 
   const chooseInitial = (initial: string) => {
@@ -222,6 +242,7 @@ function App() {
         behavior: 'smooth',
       });
     });
+    trackEvent('select_initial', { initial });
   };
 
   const syncInitialFromScroll = () => {
@@ -270,7 +291,11 @@ function App() {
           <input
             type="checkbox"
             checked={exactOnly}
-            onChange={(event) => setExactOnly(event.target.checked)}
+            onChange={(event) => {
+              const checked = event.target.checked;
+              setExactOnly(checked);
+              trackEvent('toggle_exact', { enabled: checked });
+            }}
           />
           <span>精确</span>
         </label>
@@ -294,15 +319,18 @@ function App() {
           </div>
           {rhymeReadings.length > 1 && (
             <div className="rhyme-options" aria-label="押韵韵母">
-              {rhymeReadings.map((reading, index) => (
+              {rhymeReadings.map((reading, idx) => (
                 <button
                   type="button"
-                key={`${reading.pinyin}-${reading.final}-${reading.rhyme}`}
-                className={reading === activeReading ? 'active' : ''}
-                onClick={() => setReadingIndex(index)}
-              >
-                {reading.pinyin}
-              </button>
+                  key={`${reading.pinyin}-${reading.final}-${reading.rhyme}`}
+                  className={reading === activeReading ? 'active' : ''}
+                  onClick={() => {
+                    setReadingIndex(idx);
+                    trackEvent('select_reading', { pinyin: reading.pinyin });
+                  }}
+                >
+                  {reading.pinyin}
+                </button>
               ))}
             </div>
           )}
@@ -318,13 +346,24 @@ function App() {
                 key={`${item.char}-${item.pinyin}`}
                 data-final={itemFinal(item)}
                 className={item.char === selectedChar ? 'idea-chip selected' : 'idea-chip'}
-                onClick={() => setSelectedChar(item.char)}
+                onClick={() => {
+                  setSelectedChar(item.char);
+                  trackEvent('select_character', { char: item.char, source: 'inspiration' });
+                }}
                 onDoubleClick={() => continueWith(item.char)}
               >
                 {item.char}
               </button>
             ))}
-            <button className="shuffle-btn" type="button" onClick={() => setRandomSeed(Date.now())} aria-label="换一批">
+            <button
+              className="shuffle-btn"
+              type="button"
+              onClick={() => {
+                setRandomSeed(Date.now());
+                trackEvent('shuffle_inspiration');
+              }}
+              aria-label="换一批"
+            >
               <Shuffle size={15} />
             </button>
             {!inspiration.length && <p className="muted">没有找到可用的常用押韵字。</p>}
@@ -390,7 +429,10 @@ function App() {
                               type="button"
                               data-final={itemFinal(primary)}
                               className={primary.char === selectedChar ? 'char-chip main selected' : 'char-chip main'}
-                              onClick={() => setSelectedChar(primary.char)}
+                              onClick={() => {
+                                setSelectedChar(primary.char);
+                                trackEvent('select_character', { char: primary.char, source: 'result_list' });
+                              }}
                               onDoubleClick={() => continueWith(primary.char)}
                             >
                               {primary.char}
@@ -401,7 +443,10 @@ function App() {
                                 data-final={itemFinal(item)}
                                 className={item.char === selectedChar ? 'char-chip selected' : 'char-chip'}
                                 key={`${item.char}-${item.pinyin}`}
-                                onClick={() => setSelectedChar(item.char)}
+                                onClick={() => {
+                                  setSelectedChar(item.char);
+                                  trackEvent('select_character', { char: item.char, source: 'result_list' });
+                                }}
                                 onDoubleClick={() => continueWith(item.char)}
                               >
                                 {item.char}
@@ -412,7 +457,10 @@ function App() {
                                 type="button"
                                 className="char-more"
                                 aria-label={`查看更多${initial}${TONE_LABELS[tone]}`}
-                                onClick={() => setMorePanel({ initial, tone, items })}
+                                onClick={() => {
+                                  setMorePanel({ initial, tone, items });
+                                  trackEvent('view_more', { initial, tone });
+                                }}
                               >
                                 <ChevronRight size={18} />
                               </button>
@@ -433,6 +481,17 @@ function App() {
             <a href="https://github.com/holynova">{AUTHOR_NAME}</a>
             <a href={REPO_URL}>GitHub</a>
             <span>v{APP_VERSION}</span>
+
+            {/* 访问统计 (Vercount/不蒜子) */}
+            <div className="footer-stats">
+              <span id="busuanzi_container_site_pv">
+                本站总访问量 <span id="busuanzi_value_site_pv" className="footer-stats-val">-</span> 次
+              </span>
+              <span>·</span>
+              <span id="busuanzi_container_site_uv">
+                访客数 <span id="busuanzi_value_site_uv" className="footer-stats-val">-</span> 人
+              </span>
+            </div>
           </footer>
         </div>
       </section>
@@ -456,7 +515,10 @@ function App() {
                   key={`${item.char}-${item.pinyin}`}
                   data-final={itemFinal(item)}
                   className={item.char === selectedChar ? 'more-char selected' : 'more-char'}
-                  onClick={() => setSelectedChar(item.char)}
+                  onClick={() => {
+                    setSelectedChar(item.char);
+                    trackEvent('select_character', { char: item.char, source: 'more_panel' });
+                  }}
                   onDoubleClick={() => {
                     setMorePanel(null);
                     continueWith(item.char);

@@ -45,6 +45,16 @@ try {
     isMobile: true,
   });
 
+  // 拦截并终止第三方统计脚本的加载，防止因网络环境或沙箱限制导致测试超时
+  await page.route('**/*', (route) => {
+    const requestUrl = route.request().url();
+    if (requestUrl.includes('vercount.one') || requestUrl.includes('umami.is')) {
+      route.abort();
+    } else {
+      route.continue();
+    }
+  });
+
   await page.goto(url, { waitUntil: 'networkidle' });
   await page.screenshot({ path: 'qa-mobile-viewport.png', fullPage: false });
 
