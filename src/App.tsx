@@ -3,7 +3,10 @@ import {
   ChevronRight,
   Shuffle,
   X,
+  Share2,
 } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import QRCode from 'qrcode';
 import data from './data/rhyme-index.json';
 import { lastHanChar, readingsForChar, type Reading, type Tone } from './rhyme';
 import './styles.css';
@@ -177,6 +180,63 @@ function App() {
   const resultRefs = useRef(new Map<string, HTMLElement>());
   const commonOnly = false;
 
+  // 分享卡片相关状态与 Ref
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareImgUrl, setShareImgUrl] = useState('');
+  const shareCardRef = useRef<HTMLDivElement | null>(null);
+  const qrCanvasRef = useRef<HTMLImageElement | null>(null);
+
+  // 渲染分享卡片并转换为 Base64 图片
+  const generateShareCard = async () => {
+    setShareImgUrl('');
+    setShareOpen(true);
+    trackEvent('open_share_card', { query });
+
+    try {
+      // 1. 生成当前网页的 QR 二维码的 Base64
+      const currentUrl = window.location.href;
+      const qrDataUrl = await QRCode.toDataURL(currentUrl, {
+        margin: 1,
+        width: 160,
+        color: {
+          dark: '#141413', // slate
+          light: '#ffffff', // paper
+        },
+      });
+
+      // 2. 赋予卡片 DOM 的图片节点
+      if (qrCanvasRef.current) {
+        qrCanvasRef.current.src = qrDataUrl;
+      }
+
+      // 等待图片加载及 DOM 更新
+      await new Promise((resolve) => setTimeout(resolve, 350));
+
+      if (shareCardRef.current) {
+        const canvas = await html2canvas(shareCardRef.current, {
+          scale: 2, // 导出 2 倍的高清大图，非常适合手机屏幕显示和保存
+          useCORS: true,
+          backgroundColor: '#faf9f5', // 保持和 `--ivory` 色值一致，避免透明背景
+          logging: false,
+        });
+        const dataUrl = canvas.toDataURL('image/png');
+        setShareImgUrl(dataUrl);
+      }
+    } catch (err) {
+      console.error('Failed to generate sharing image:', err);
+    }
+  };
+
+  // 触发图片下载（桌面端友好）
+  const downloadShareImage = () => {
+    if (!shareImgUrl) return;
+    trackEvent('download_share_image', { query });
+    const link = document.createElement('a');
+    link.href = shareImgUrl;
+    link.download = `韵脚画布_${query || '分享卡片'}.png`;
+    link.click();
+  };
+
   const targetChar = lastHanChar(query);
   const readings = useMemo(() => mergeReadings(targetChar), [targetChar]);
   const rhymeReadings = useMemo(() => uniqueRhymeReadings(readings), [readings]);
@@ -266,6 +326,14 @@ function App() {
       <header className="topbar">
         <h1>韵脚画布</h1>
         <div className="header-actions">
+          <button
+            type="button"
+            className="icon-link"
+            onClick={generateShareCard}
+            aria-label="分享网页"
+          >
+            <Share2 size={17} />
+          </button>
           <a className="icon-link" href={REPO_URL} aria-label="GitHub repository">
             <GitHubMark />
           </a>
@@ -527,6 +595,92 @@ function App() {
                   {item.char}
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 离线渲染的分享卡片（位于屏幕外，专供 html2canvas 渲染） */}
+      <div className="share-card-container">
+        <div className="share-card" ref={shareCardRef}>
+          <div className="share-card-header">
+            <h2>韵脚画布</h2>
+            <span>v{APP_VERSION}</span>
+          </div>
+
+          <div className="share-card-body">
+            {targetChar ? (
+              <div className="share-card-query-box">
+                <p className="share-card-query">「{query}」</p>
+                <span className="share-card-pinyin">{activeReading?.pinyin}</span>
+                <div className="share-card-meta">
+                  <span>声母: <b>{selectedInitial}</b></span>
+                  <span>韵母: <b>{activeReading?.final}</b></span>
+                  <span>韵部: <b>{activeReading?.rhyme}</b></span>
+                </div>
+              </div>
+            ) : (
+              <div className="share-card-default-box">
+                <p className="share-card-default-title">「笔墨纸砚，字字铿锵」</p>
+                <p className="share-card-default-desc">输入你的词句，实时探索押韵灵感</p>
+              </div>
+            )}
+
+            <p className="share-card-intro">
+              韵脚画布是一款专注于移动端体验的中文押韵字查找工具。它能根据输入分析多音字，支持声母分组和精确查找，为歌词创作、诗词写作与创意文案提供无限韵律灵感。
+            </p>
+          </div>
+
+          <div className="share-card-footer">
+            <img className="share-card-qr" ref={qrCanvasRef} alt="QR Code" />
+            <div className="share-card-info">
+              <span className="share-card-info-title">扫码开启押韵之旅</span>
+              <span className="share-card-info-url">holynova.github.io/char_finder/</span>
+              <span className="share-card-info-tip">或搜索 GitHub 仓库: char_finder</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 分享弹窗 */}
+      {shareOpen && (
+        <div className="share-overlay" role="dialog" aria-modal="true" aria-label="分享卡片">
+          <div className="share-modal">
+            <div className="share-modal-head">
+              <h3>生成分享图</h3>
+              <button
+                type="button"
+                className="more-close"
+                onClick={() => setShareOpen(false)}
+                aria-label="关闭"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="share-modal-body">
+              {shareImgUrl ? (
+                <>
+                  <img src={shareImgUrl} className="share-img" alt="Share Card Preview" />
+                  <p className="share-tip">💡 长按上方图片即可保存至相册，分享给好友</p>
+                </>
+              ) : (
+                <div className="share-loading">
+                  <div className="share-spinner"></div>
+                  <span>正在绘制精美分享图...</span>
+                </div>
+              )}
+            </div>
+
+            <div className="share-modal-foot">
+              <button
+                type="button"
+                className="share-download-btn"
+                onClick={downloadShareImage}
+                disabled={!shareImgUrl}
+              >
+                下载分享图片
+              </button>
             </div>
           </div>
         </div>

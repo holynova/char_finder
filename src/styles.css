@@ -800,3 +800,294 @@ h2 {
     justify-content: flex-start;
   }
 }
+
+/* ==========================================================================
+   分享卡片与弹窗样式
+   ========================================================================== */
+
+/* 隐藏于屏幕外的卡片 DOM，专供 html2canvas 抓取 */
+.share-card-container {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 360px;
+  background: #faf9f5;
+  overflow: hidden;
+}
+
+.share-card {
+  width: 360px;
+  padding: 28px 24px;
+  background: #faf9f5;
+  border: 1.5px solid var(--g300);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  color: var(--slate);
+  box-sizing: border-box;
+}
+
+.share-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1.5px solid var(--g200);
+  padding-bottom: 10px;
+}
+
+.share-card-header h2 {
+  font-family: var(--serif);
+  font-size: 24px;
+  color: var(--clay);
+  margin: 0;
+}
+
+.share-card-header span {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--g500);
+}
+
+.share-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 动态搜索内容展示盒 */
+.share-card-query-box {
+  background: var(--paper);
+  border: 1.5px solid var(--g200);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.share-card-query {
+  font-family: var(--serif);
+  font-size: 28px;
+  color: var(--slate);
+  margin: 0;
+  font-weight: 500;
+}
+
+.share-card-pinyin {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--clay-d);
+  font-weight: 700;
+}
+
+.share-card-meta {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--g700);
+}
+
+.share-card-meta span b {
+  color: var(--olive);
+}
+
+/* 无查询词时的默认美化书签 */
+.share-card-default-box {
+  background: var(--paper);
+  border: 1.5px solid var(--g200);
+  border-radius: 8px;
+  padding: 24px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.share-card-default-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--g700);
+  margin: 0;
+  font-style: italic;
+}
+
+.share-card-default-desc {
+  font-size: 13px;
+  color: var(--g500);
+  margin: 0;
+}
+
+.share-card-intro {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--g700);
+  margin: 0;
+  padding: 4px 0;
+}
+
+.share-card-footer {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 16px;
+  align-items: center;
+  border-top: 1.5px solid var(--g200);
+  padding-top: 14px;
+  margin-top: 6px;
+}
+
+.share-card-qr {
+  width: 80px;
+  height: 80px;
+  background: var(--paper);
+  padding: 2px;
+  border: 1.5px solid var(--g200);
+  border-radius: 4px;
+  display: block;
+}
+
+.share-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.share-card-info-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--olive);
+}
+
+.share-card-info-url {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--g500);
+  word-break: break-all;
+}
+
+.share-card-info-tip {
+  font-size: 10px;
+  color: var(--g500);
+  margin-top: 2px;
+}
+
+/* 分享遮罩层弹窗 */
+.share-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: color-mix(in srgb, var(--ivory) 85%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.share-modal {
+  display: flex;
+  width: min(100%, 360px);
+  max-height: 90dvh;
+  flex-direction: column;
+  border: 1.5px solid var(--g200);
+  border-radius: 12px;
+  background: var(--paper);
+  box-shadow: 0 20px 60px color-mix(in srgb, var(--slate) 15%, transparent);
+  overflow: hidden;
+  position: relative;
+}
+
+.share-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1.5px solid var(--g200);
+}
+
+.share-modal-head h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--slate);
+}
+
+.share-modal-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  overflow-y: auto;
+  min-height: 200px;
+  justify-content: center;
+}
+
+.share-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--g500);
+  font-size: 13px;
+  padding: 40px 0;
+}
+
+.share-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid var(--g200);
+  border-top-color: var(--clay);
+  border-radius: 50%;
+  animation: share-spin 0.8s linear infinite;
+}
+
+@keyframes share-spin {
+  to { transform: rotate(360deg); }
+}
+
+.share-img {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--slate) 8%, transparent);
+  border: 1px solid var(--g200);
+}
+
+.share-tip {
+  font-size: 11px;
+  color: var(--clay-d);
+  text-align: center;
+  margin: 0;
+}
+
+.share-modal-foot {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1.5px solid var(--g200);
+  background: var(--g100);
+}
+
+.share-download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--clay);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 120ms;
+}
+
+.share-download-btn:hover {
+  background: var(--clay-d);
+}
+
