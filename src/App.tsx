@@ -13,7 +13,7 @@ import './styles.css';
 
 const REPO_URL = 'https://github.com/holynova/char_finder';
 const AUTHOR_NAME = 'holynova';
-const APP_VERSION = '1.0.1';
+const APP_VERSION = '1.1.0';
 const TONES: Tone[] = [1, 2, 3, 4];
 const INLINE_RESULT_LIMIT = 6;
 const INLINE_RESULT_LIMIT_WITH_MORE = 5;

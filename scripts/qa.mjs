@@ -1,6 +1,7 @@
 import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
 import data from '../src/data/rhyme-index.json' with { type: 'json' };
+import pkg from '../package.json' with { type: 'json' };
 
 const explicitUrl = process.env.QA_URL;
 const url = explicitUrl ?? 'http://127.0.0.1:4173/';
@@ -126,7 +127,7 @@ try {
   assert(historyButtons === 0, 'unused history icon should not ship');
   assert(githubLinks >= 2, 'header and footer should link to the GitHub repository');
   assert(authorLinks >= 1, 'footer should link to the author profile');
-  assert(await page.getByText('v1.0.1').count() >= 1, 'footer should show the app version');
+  assert(await page.getByText(`v${pkg.version}`).count() >= 1, 'footer should show the app version');
   assert(readingRows === 0, 'top pinyin metadata row should be removed');
   assert(cardToneLabels > rows, 'result cards should group characters under tone labels');
   assert(ideaCount === 8, 'random inspiration should show eight options');
