@@ -186,6 +186,10 @@ function App() {
   const shareCardRef = useRef<HTMLDivElement | null>(null);
   const qrCanvasRef = useRef<HTMLImageElement | null>(null);
 
+  // 访问统计数据状态 (Vercount)
+  const [pv, setPv] = useState<number | null>(null);
+  const [uv, setUv] = useState<number | null>(null);
+
   // 渲染分享卡片并转换为 Base64 图片
   const generateShareCard = async () => {
     setShareImgUrl('');
@@ -260,6 +264,46 @@ function App() {
   useEffect(() => {
     setReadingIndex(0);
   }, [targetChar]);
+
+  // 页面 PV/UV 访问统计初始化 (Vercount)
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const host = window.location.host || 'unknown-host';
+        const cookieName = `vercount_uv_${host.replace(/[^a-zA-Z0-9_-]/g, '_')}`;
+        const hasCookie = document.cookie.split('; ').find(row => row.startsWith(`${cookieName}=`));
+        const isNewUv = !hasCookie;
+
+        if (isNewUv) {
+          document.cookie = `${cookieName}=1; path=/; max-age=31536000; samesite=lax`;
+        }
+
+        const response = await fetch('https://events.vercount.one/api/v2/log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            url: window.location.href,
+            isNewUv
+          })
+        });
+
+        if (response.ok) {
+          const res = await response.json();
+          if (res && res.status === 'success' && res.data) {
+            setPv(res.data.site_pv || 0);
+            setUv(res.data.site_uv || 0);
+          } else if (res && res.site_pv !== undefined) {
+            setPv(res.site_pv || 0);
+            setUv(res.site_uv || 0);
+          }
+        }
+      } catch (err) {
+        console.warn('Vercount stats fetch failed:', err);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   useEffect(() => {
     if (!availableInitials.length) return;
@@ -552,12 +596,12 @@ function App() {
 
             {/* 访问统计 (Vercount/不蒜子) */}
             <div className="footer-stats">
-              <span id="busuanzi_container_site_pv">
-                本站总访问量 <span id="busuanzi_value_site_pv" className="footer-stats-val">-</span> 次
+              <span>
+                本站总访问量 <span className="footer-stats-val">{pv !== null ? pv : '-'}</span> 次
               </span>
               <span>·</span>
-              <span id="busuanzi_container_site_uv">
-                访客数 <span id="busuanzi_value_site_uv" className="footer-stats-val">-</span> 人
+              <span>
+                访客数 <span className="footer-stats-val">{uv !== null ? uv : '-'}</span> 人
               </span>
             </div>
           </footer>
