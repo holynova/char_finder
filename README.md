@@ -27,7 +27,7 @@ npm run dev
 ## 发布构建
 
 ```bash
-npm test
+pnpm run build
 ```
 
-构建产物输出到 `docs/`，用于 GitHub Pages 发布。
+构建产物输出到 `dist/`；构建完成后会同步一份到 `docs/`，用于 GitHub Pages 发布。
