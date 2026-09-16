@@ -2,6 +2,11 @@
 
 移动端中文押韵字查找工具：输入中文词句，取末字分析多音字读音、声母、韵母、押韵韵部和声调，实时给出可用韵脚。
 
+<p align="center">
+  <img src="assets/readme/hero.svg" width="100%" alt="韵脚画布: 移动端中文押韵字查找工具：输入中文词句，取末字分析多音字读音、声母、韵母、押韵韵部和声调，实时给出可用韵脚。">
+</p>
+
+
 ![项目截图](./public/screenshot.png)
 
 - 在线使用：https://holynova.github.io/char_finder/
