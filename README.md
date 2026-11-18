@@ -1,24 +1,24 @@
+<p align="right"><a href="README.en.md">English</a></p>
+
 <p align="center">
   <img src="./assets/readme/hero.svg" width="100%" alt="韵脚画布 — 移动端中文押韵字查找：输入月光，取末字光，guang 一声，声母 g、韵母 uang、韵部 ang，同韵字帮邦梆">
 </p>
 
 <p align="center">
-  <a href="https://char-finder.xiaosang.cc/">▶ 在线使用 Try Online</a>
+  <a href="https://char-finder.xiaosang.cc/">▶ 在线使用</a>
   ·
   <a href="https://github.com/holynova/char_finder">GitHub 仓库</a>
 </p>
 
 移动端中文押韵字查找工具：输入中文词句，自动取最后一个汉字分析多音字读音、声母、韵母、押韵韵部和声调，实时给出可用韵脚。内置 3,495 个汉字、16 个韵部、23 个声母的离线韵脚索引，按常用程度排序，还能一键生成分享卡片。
 
-A mobile Chinese rhyme lookup tool: type a Chinese phrase and it analyzes the last character — all its readings, initial, final, rhyme group and tone — and shows usable rhymes in real time. An offline index of 3,495 characters, 16 rhyme groups and 23 initials, ranked by frequency, with one-tap share cards.
-
-## 截图 / Screenshots
+## 截图
 
 <p align="center">
   <img src="./assets/readme/screenshot-app.png" width="300" alt="输入月光，取末字光（guang，uang≈ang），按声母分组、按声调排列的同韵字列表">
 </p>
 
-## 功能 / Features
+## 功能
 
 - **输入即搜索**：自动取最后一个汉字作为押韵目标，边输边出结果。
 - **多音字全展示**：一个字有多个读音时全部列出，可切换不同读音对应的韵母结果。
@@ -27,7 +27,7 @@ A mobile Chinese rhyme lookup tool: type a Chinese phrase and it analyzes the la
 - **按常用程度排序**：基于 SUBTLEX-CH 字频排序，常用字在前；默认包含生僻字结果，便于找更丰富的押韵选择。
 - **分享卡片**：一键把当前查询结果生成图片卡片下载分享。
 
-## 韵脚索引 / Rhyme Index
+## 韵脚索引
 
 - **3,495 个汉字**，每个字含全部读音（拼音、声母、韵母、韵部、声调、常用层级）。
 - **16 个韵部**：a、ai、an、ang、ao、e、ei、en、eng、er、i、o、ong、ou、u、ü（宽泛归并，如 uang/iang → ang，in/un → en）。
@@ -35,7 +35,7 @@ A mobile Chinese rhyme lookup tool: type a Chinese phrase and it analyzes the la
 - 数据来源：common-chinese-characters + SUBTLEX-CH-CHR 字频 + pinyin-pro；索引由 `scripts/build-rhyme-index.mjs` 生成（当前索引生成于 2026-06-20）。
 - 纯本地离线查询，无需联网。
 
-## 本地开发 / Develop Locally
+## 本地开发
 
 ```bash
 npm install
@@ -45,7 +45,7 @@ npm test           # 索引 + 构建 + QA 校验
 
 构建产物输出到 `docs/`，用于 GitHub Pages 发布。
 
-## 技术 / Tech
+## 技术
 
 - React 19 + TypeScript + Vite；拼音解析用 pinyin-pro，字频用 SUBTLEX-CH-CHR。
 - 字体：霞鹜文楷屏幕版（LXGW WenKai Screen，子集化 woff2）。
@@ -58,14 +58,3 @@ src/data/rhyme-index.json   离线韵脚索引（3,495 字）
 scripts/build-rhyme-index.mjs   索引生成脚本
 scripts/qa.mjs          数据 QA 校验
 ```
-
-## English
-
-**韵脚画布 (Rhyme Canvas)** — a mobile Chinese rhyme finder. Type a phrase; it takes the last character and analyzes every reading — initial, final, rhyme group, tone — then lists rhyming characters live.
-
-- **How it works**: input-as-you-type search; polyphonic characters show all readings, switchable per reading; exact mode shows only perfect final matches, while broad mode ranks closer finals first (e.g. `in` before `en` when `in≈en`).
-- **Results** are grouped by 23 initials, then by 4 tones (平 level / 扬 rising / 转 dipping / 落 falling), ranked by SUBTLEX-CH frequency; rare characters are included by default for richer choices.
-- **Offline index**: 3,495 characters, 16 rhyme groups (a, ai, an, ang, ao, e, ei, en, eng, er, i, o, ong, ou, u, ü), built from common-chinese-characters + SUBTLEX-CH-CHR + pinyin-pro. No network needed.
-- **Share cards**: export the current query as a PNG card in one tap (html2canvas).
-- **Tech**: React 19 + TypeScript + Vite; LXGW WenKai Screen font (subset woff2).
-- **Run it**: `npm install && npm run dev`. Build output goes to `docs/` for GitHub Pages.
