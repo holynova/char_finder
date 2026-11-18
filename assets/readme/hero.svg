@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="360" viewBox="0 0 1200 360"
+     role="img" aria-labelledby="title desc">
+  <title id="title">韵脚画布 — 移动端中文押韵字查找：输入词句，取末字找韵脚</title>
+  <desc id="desc">宣纸底朱砂点缀的标题：韵脚画布；右侧是“月光”取末字“光”的分析卡：guang、一声，声母 g、韵母 uang、韵部 ang，同韵字帮邦膨榜。</desc>
+
+  <rect width="1200" height="360" rx="26" fill="#faf6ef"/>
+
+  <g id="title-block" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <text x="56" y="62" font-size="19" letter-spacing="3" fill="#c2402a">移动端中文押韵字查找 · CHINESE RHYME FINDER</text>
+    <text x="56" y="128" font-size="58" font-weight="700" fill="#26221c">韵脚画布</text>
+    <text x="56" y="168" font-size="23" fill="#44403c">输入中文词句，取末字分析，实时给出可用韵脚</text>
+    <text x="56" y="204" font-size="19" fill="#57534e">多音字、声母、韵母、韵部、声调，一次看清。</text>
+    <g id="chips" font-size="18" fill="#26221c" text-anchor="middle">
+      <g><rect x="56" y="238" width="126" height="36" rx="18" fill="#ffffff" stroke="#e7ddd0" stroke-width="1.5"/><text x="119" y="262">3,495 个汉字</text></g>
+      <g><rect x="194" y="238" width="126" height="36" rx="18" fill="#ffffff" stroke="#e7ddd0" stroke-width="1.5"/><text x="257" y="262">16 个韵部</text></g>
+      <g><rect x="332" y="238" width="126" height="36" rx="18" fill="#ffffff" stroke="#e7ddd0" stroke-width="1.5"/><text x="395" y="262">23 个声母</text></g>
+      <g><rect x="470" y="238" width="150" height="36" rx="18" fill="#c2402a"/><text x="545" y="262" fill="#ffffff">可导出分享卡</text></g>
+    </g>
+  </g>
+
+  <g id="analysis" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <g id="analysis-shapes">
+      <rect x="780" y="44" width="360" height="272" rx="16" fill="#ffffff" stroke="#e7ddd0" stroke-width="1.5"/>
+      <rect x="804" y="60" width="312" height="52" rx="10" fill="#faf6ef" stroke="#e7ddd0" stroke-width="1.5"/>
+      <rect x="804" y="196" width="70" height="52" rx="10" fill="#faf6ef"/>
+      <rect x="882" y="196" width="70" height="52" rx="10" fill="#faf6ef"/>
+      <rect x="960" y="196" width="70" height="52" rx="10" fill="#faf6ef"/>
+      <rect x="1038" y="196" width="78" height="52" rx="10" fill="#faf6ef"/>
+    </g>
+    <g id="analysis-labels">
+      <text x="820" y="95" font-size="24" fill="#26221c">月光</text>
+      <text x="1064" y="95" font-size="24" font-weight="700" fill="#c2402a">光</text>
+      <text x="804" y="160" font-size="44" font-weight="700" fill="#26221c">光</text>
+      <text x="862" y="148" font-size="22" fill="#26221c">guāng</text>
+      <text x="862" y="176" font-size="18" fill="#57534e">一声 · 平</text>
+      <text x="1116" y="160" font-size="18" fill="#57534e" text-anchor="end">末字分析</text>
+      <text x="839" y="220" font-size="18" fill="#57534e" text-anchor="middle">声母</text>
+      <text x="839" y="242" font-size="19" font-weight="700" fill="#26221c" text-anchor="middle">g</text>
+      <text x="917" y="220" font-size="18" fill="#57534e" text-anchor="middle">韵母</text>
+      <text x="917" y="242" font-size="19" font-weight="700" fill="#26221c" text-anchor="middle">uang</text>
+      <text x="995" y="220" font-size="18" fill="#57534e" text-anchor="middle">韵部</text>
+      <text x="995" y="242" font-size="19" font-weight="700" fill="#26221c" text-anchor="middle">ang</text>
+      <text x="1077" y="220" font-size="18" fill="#57534e" text-anchor="middle">声调</text>
+      <text x="1077" y="242" font-size="19" font-weight="700" fill="#26221c" text-anchor="middle">1 声</text>
+      <text x="804" y="292" font-size="19" fill="#26221c">同韵：帮 邦 梆 …</text>
+    </g>
+  </g>
+</svg>
